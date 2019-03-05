@@ -1,0 +1,76 @@
+.Index{
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+.Index .background{
+    height: 100%;
+    width: 100%;
+}
+.Index-logo{
+    height:100%;
+    width: 100%;
+	position:relative;
+}
+.logo{
+    width: 200px;
+    height: 100px;
+    position: relative;
+    top: 220px;
+}
+
+
+.Index-body{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+}
+
+.Index-window{
+    background-color: rgba(0, 0, 0, 0.164);
+    width: 400px;
+    height: 350px;
+    margin: 0 auto;
+    margin-top: 120px;
+    /* border: 1px solid rgba(0, 0, 0, 0.397); */
+    position: relative;
+    border-top-left-radius:10px;   
+    border-top-right-radius:10px;
+    border-bottom-left-radius:10px; 
+    border-bottom-right-radius:10px; 
+}
+.input-Box{
+    padding-top: 20%;
+}
+.input-box{
+    margin: 20px auto;
+    width: 280px;
+    
+}
+.button-box{
+    padding-top: 20px;
+    width: 198px;
+    float: left;
+}
+
+.company{
+    color: #0c0c12;
+    font-size: 15px;
+    padding-top: 100px;
+    font-weight: 500;
+    font-family: Avenir,-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol',sans-serif;
+}
+.memory{
+    width: 16px;
+    height: 16px;
+    float: left;
+    margin-left: 240px;
+    margin-top: 4px;
+}
+.memory-body{
+    padding-top: 70px;
+}
+input[type='radio'], input[type='checkbox']{
+    height: 16px;
+}
