@@ -1,0 +1,57 @@
+
+
+.top-head-navigation-bar{
+    width: 100%;
+    height: 100%;
+}
+.head-navigation-bar{
+    /* background-color: rgb(240, 213, 126); */
+    height: 48px;
+    width: 100%;
+    position: fixed;
+    border-bottom: 1px solid #e8e8e8;
+    z-index: 100;
+    background-color: white;
+    top: 0px;
+}
+
+.top-box{
+
+
+
+}
+.top-box-logo{
+    height: 100%;
+    width: 120px;
+    float: left;
+    cursor: pointer;
+}
+
+
+.ant-menu-horizontal{
+    float: left;
+    width: 76%;
+}
+
+.top-r-box-showcompany{
+    float: right;
+  
+}
+.top-r-box-showcompany .anticon{
+    margin-top: 10px;
+    font-size: 20px;
+    margin-right: 16px;
+    cursor: pointer;
+}
+.top-icon{
+    float: left;
+}
+
+.top-user{
+    float: left;
+    padding-right: 10px;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
