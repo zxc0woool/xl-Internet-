@@ -1,0 +1,26 @@
+.data-tree{
+  float: left;
+}
+
+.dhx_cell_layout{
+    left: 0px;
+    top: 0px;
+    width: 240px;
+    height: 700px;
+    overflow: auto;
+    border: 1px solid #e8e8e8;
+
+  }
+.data-tree .first-child i:hover{
+    color: rgb(0, 0, 0) !important
+}
+
+.data-tree .first-child{
+    height: 32px;
+    line-height: 32px;
+    min-width: 200px;
+    padding: 0px 5px;
+    border-bottom: 1px solid #dcdfe2;
+    background-color: #dcdfe2;
+    font-size: 20px;
+}

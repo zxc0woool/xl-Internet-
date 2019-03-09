@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom'
+
 import cookie from '../../uilt/cookie';
 import logo from '../../images/login/logo.png';
 import './index.css';
@@ -19,35 +20,43 @@ function HeadNavigationBar(MyappedComponent) {
           pers: [
             {
               name:'人员管理',
-              key:'user',
+              key:'pers',
+              icon:'user',
+              use:true,
               vals:[
-                {name:'人员',url:'administration_user_ry'},
-                {name:'部门',url:'administration_user_bm'},
-                {name:'职位',url:'administration_user_zw'},
-                {name:'离职人员',url:'administration_user_lzry'}
+                {name:'人员',url:'/pers/rygl_ry'},
+                {name:'部门',url:'/pers/rygl_bm'},
+                {name:'职位',url:'/pers/rygl_zw'},
+                {name:'离职人员',url:'/pers/rygl_lzry'}
               ]
             }
           ],
           att:[
             {
               name:'考勤设备',
+              icon:'credit-card',
+              key:'att',
               vals:[
-                {name:'区域'},
-                {name:'设备'}
+                {name:'区域',url:'/att/kqsb_qy'},
+                {name:'设备',url:'/att/kqsb_sb'}
               ]
             },
             {
               name:'班次管理',
+              icon:'file-protect',
+              key:'att',
               vals:[
-                {name:'时间段'},
-                {name:'班次'}
+                {name:'时间段',url:'/att/bcgl_sjd'},
+                {name:'班次',url:'/att/bcgl_pc'}
               ]
             },
             {
               name:'统计报表',
+              icon:'file-done',
+              key:'att',
               vals:[
-                {name:'月明细报表'},
-                {name:'月统计报表'}
+                {name:'月明细报表',url:'/att/tjbb_ymxbb'},
+                {name:'月统计报表',url:'/att/tjbb_ytjbb'}
               ]
             }
           ],
@@ -71,6 +80,17 @@ function HeadNavigationBar(MyappedComponent) {
         url:this.props.match.url
       });
     }
+
+    componentWillReceiveProps() {
+
+      if (this.props.history.location.pathname !== this.props.location.pathname) {
+
+        this.props.history.push(this.props.history.location.pathname);
+        this.props.history.goBack()
+
+      }
+    }
+
     handleClick(val) {
       this.setState({
         current: val.key,
@@ -92,7 +112,7 @@ function HeadNavigationBar(MyappedComponent) {
                 selectedKeys={[this.state.current]}
                 mode="horizontal">
                 <Menu.Item title="人事" key="pers">
-                  <Link to="/pers">
+                  <Link to="/pers/rygl_ry">
                     <Icon type="user" />人事
                 </Link>
                 </Menu.Item>
@@ -100,7 +120,7 @@ function HeadNavigationBar(MyappedComponent) {
                   <Icon type="heat-map" />门禁
                 </Menu.Item> */}
                 <Menu.Item title="考勤" key="att">
-                  <Link to="/att">
+                  <Link to="/att/kqsb_qy">
                     <Icon type="solution" />考勤
                 </Link>
                 </Menu.Item>

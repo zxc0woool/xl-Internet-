@@ -83,7 +83,7 @@ class Login extends Component {
             
            
              //测试/xinlai_war_exploded/login
-            Util._httpPost("/xinlai_war_exploded/login", {
+            Util._httpPost("/project_war_exploded/login", {
                 username:this.state.UserName,
                 password:this.state.UserPassword
             }, (params) => {

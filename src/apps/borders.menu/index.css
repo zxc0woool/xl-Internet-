@@ -23,3 +23,9 @@
 .borders_menu .ant-menu-dark .ant-menu-inline.ant-menu-sub{
     border-top: 1px solid #1f1f1f;
 }
+.borders_menu .ant-layout-footer{
+    background:transparent
+}
+.borders_menu .ant-layout{
+    background:transparent
+}
