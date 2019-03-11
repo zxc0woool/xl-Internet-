@@ -37,7 +37,7 @@ export default class Chart extends Component {
                   {
                     this.props.chartlist?
                     this.props.chartlist.map((val,key)=>{
-                      return <div key={key} onClick={(e) => this.props.onClick(e,val.value)} className={this.props.event == val.value?'activation':''}>{val.value}</div>
+                      return <div key={key} onClick={(e) => this.props.onClick(e,val.value)} className={this.props.event === val.value?'activation':''}>{val.value}</div>
                     })
                     :
                     ''

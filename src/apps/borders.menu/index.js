@@ -108,10 +108,10 @@ function BordersMenu(MyappedComponent) {
                   <Layout>
                     <Header style={{ background: '#fff', padding: 0 }} />
                     <Content style={{ margin: '0 16px' }}>
-                      <Breadcrumb style={{ borderBottom: '1px solid #e8e8e8' }}>
+                      <Breadcrumb style={{height: 30, borderBottom: '1px solid #e8e8e8' }}>
                         <Breadcrumb.Item><MyappedComponent /></Breadcrumb.Item>
-                        <Breadcrumb.Item>{this.state.JumpTitle == ''?this.props.catalog[str][0].name:this.state.JumpTitle}</Breadcrumb.Item>
-                        <Breadcrumb.Item>{this.state.JumpName == ''?this.props.catalog[str][0].vals[0].name:this.state.JumpName}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{this.state.JumpTitle === ''?this.props.catalog[str][0].name:this.state.JumpTitle}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{this.state.JumpName === ''?this.props.catalog[str][0].vals[0].name:this.state.JumpName}</Breadcrumb.Item>
                       </Breadcrumb>
                       <div style={{ background: '#fff', minHeight: 730 }}>
                           <RouterMap />

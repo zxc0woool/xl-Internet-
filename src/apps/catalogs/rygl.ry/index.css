@@ -1,3 +1,18 @@
 .rygl-ry{
   
 }
+.rygl-ry-data{
+    float: left;
+    width: 100%;
+}
+.rygl-ry-data-datatree{
+    float: left;
+    width: 19%;
+    height: 732px;
+    margin-right: 10px;
+}
+.rygl-ry-data-datatable{
+    width: 80%;
+    height: 732px;
+    float: left;
+}

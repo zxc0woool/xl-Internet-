@@ -1,0 +1,103 @@
+
+.elastic-frame{
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.3);
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+.elastic-frame .dhxwin_active{
+    z-index: 105;
+    left: 271px;
+    top: 116px;
+    width: 896px;
+    height: 646px;
+    transform: translate(0px, 0px);
+    position: fixed;
+    overflow: hidden;
+    /* padding-top: 5px; */
+    border: 2px solid #aeb4b8;
+    border-radius: 3px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.35);
+    background: #aeb4b8;
+    cursor: inherit;
+}
+.elastic-frame .dhxwin_hdr{
+    position: relative;
+    height: 33px;
+    line-height: 30px;
+    margin: 0px;
+    padding: 0px;
+    font-weight: normal;
+    background-color: #aeb4b8;
+    color: #ffffff;
+    text-align: center;
+    cursor: inherit;
+    overflow: hidden;
+}
+.elastic-frame .dhxwin_text{
+    padding-left: 12px;
+    padding-right: 27px;
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: inherit;
+    z-index: 1;
+}
+
+.elastic-frame .dhxwin_text_inside{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    color: black;
+}
+.elastic-frame .dhxwin_btns{
+    position: absolute;
+    right: 7px;
+    top: 0px;
+    height: 20px;
+    cursor: default;
+    cursor: inherit;
+    z-index: 2;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.elastic-frame .dhxwin_button .dhxwin_button_close{
+    position: relative;
+    float: left;
+    width: 15px;
+    height: 15px;
+    margin-left: 2px;
+    margin-top: 3px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+.elastic-frame .dhx_cell_wins{
+    left: 4px;
+    top: 33px;
+    width: 884px;
+    height: 607px;
+    position: absolute;
+    background-color: #ffffff;
+    margin: 0px;
+    padding: 0px;
+    cursor: default;
+    padding: 6px;
+}

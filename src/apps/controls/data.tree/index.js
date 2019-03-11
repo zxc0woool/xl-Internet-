@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Tree, Icon } from 'antd';
 import './index.css';
 
-const DirectoryTree = Tree.DirectoryTree;
+// const DirectoryTree = Tree.DirectoryTree;
 const { TreeNode } = Tree;
 let datalistkey ={list:[],data:{}};
 class DataTree extends Component {
@@ -48,32 +48,43 @@ class DataTree extends Component {
   }
 
   componentDidMount() {
-
+    //打开Data树
+    this.onClickDefaultExpandAllYes()
   }
 
   componentDidUpdate(){
-
-
+ 
   }
 
-  directoryTree = () => {
+  onExpand = (selectedKeys, info) => {
+  
+    let list = [];
+    for(let i in this.state.checkedKeys){
+      list.push(this.state.checkedKeys[i]);
+    }
+    if(info.expanded){
+      list.push(info.node.props.title)
+      this.setState({
+        checkedKeys:list
+      })
+    }else{
+      for(let i in list){
+        if(list[i] === info.node.props.title){
+          list.splice(i, 1);
+        }
+      }
+      this.setState({
+        checkedKeys:list
+      })
 
-    return  <Tree
-            showLine
-            expandedKeys={this.state.checkedKeys}
-            onSelect={this.onSelect}
-        
-          >
-              {
-                this.TreeNode(this.state.datalist)
-              }
-
-            </Tree>
+    }
+ 
+    console.log('Expand', selectedKeys, info);
   }
 
   onSelect = (selectedKeys, info) => {
-
-
+    
+  
     console.log('selected', selectedKeys, info);
   }
 
@@ -124,13 +135,21 @@ class DataTree extends Component {
         </div>
         <div className="dhx_cell_layout">
 
-         {
-           this.directoryTree()
-            
-         }
+          <Tree
+            showLine
+            expandedKeys={this.state.checkedKeys}
+            onSelect={this.onSelect}
+            onExpand={this.onExpand}
+          >
+              {
+                this.TreeNode(this.state.datalist)
+              }
+
+          </Tree>
        
 
         </div>
+    
 
       </div>
     );

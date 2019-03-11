@@ -28,14 +28,17 @@
 }
 
 
-.ant-menu-horizontal{
+.top-head-navigation-bar .ant-menu-horizontal{
     float: left;
     width: 76%;
+    position: absolute;
+    left: 130px;
 }
 
 .top-r-box-showcompany{
     float: right;
-  
+    position: fixed;
+    right: 0;
 }
 .top-r-box-showcompany .anticon{
     margin-top: 10px;

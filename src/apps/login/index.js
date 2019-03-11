@@ -40,23 +40,6 @@ class Login extends Component {
             });
           
         }
-        // debugger
-        // const _this=this;    //先存一下this，以防使用箭头函数this会指向我们不希望它所指向的对象。http://192.168.2.116:8080/xinlai_war_exploded/login
-        // axios.post('http://192.168.2.116:8080/xinlai_war_exploded/position/findPositionAll.do',{})
-        // .then(function (response) {
-
-        //   _this.setState({
-        //     users:response.data,
-        //     isLoaded:true
-        //   });
-        // })
-        // .catch(function (error) {
-        //   console.log(error);
-        //   _this.setState({
-        //     isLoaded:false,
-        //     error:error
-        //   })
-        // })
 
       
     }
@@ -80,32 +63,36 @@ class Login extends Component {
 
 
         if(this.state.UserName !== "" && this.state.UserPassword !== ""){
-            
-           
-             //测试/xinlai_war_exploded/login
-            Util._httpPost("/project_war_exploded/login", {
+            //登入接口/xinlai_war_exploded/login
+            Util._httpPost("/project_war_exploded/user/login.do", {
                 username:this.state.UserName,
                 password:this.state.UserPassword
-            }, (params) => {
+            }).then((params) => {
                 debugger
-                 //登录成功后
-                cookie.Set({
-                user:{
-                    UserName:this.state.UserName,
-                    UserPassword:this.state.UserPassword,
-                    memory:this.state.memory
+            
+                if(params.data.flag){
+                     //登录成功
+                    let password = ""
+                    if(this.state.memory){
+                        password = params.data.password
+                    }
+                    cookie.Set({
+                        user:{
+                            UserName:params.data.username,
+                            UserPassword:password,
+                            sessionId:params.data.sessionId,
+                            memory:this.state.memory
+                        }
+                    })
+                    this.props.history.push('/index');
+                }else{
+                    //登入失败
                 }
+                
+            }).catch(function (error) {
+               debugger
             })
-            this.props.history.push('/index');
-
-
-
-            }, (e) => {
-                debugger
-            })
-        
-        }else{
-
+           
         }
        
     }
