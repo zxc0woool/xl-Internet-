@@ -16,7 +16,7 @@ function BordersMenu(MyappedComponent) {
       super(props);
       this.state = {
         collapsed: false,
-        current: '0-0',
+        current: '/pers/rygl_ry',
         Url: '',
         JumpUrl: '',
         JumpName: '',
@@ -27,6 +27,7 @@ function BordersMenu(MyappedComponent) {
 
     componentDidMount() {
 
+      this.setState({ current: this.props.location.pathname});
     }
    
  
@@ -83,7 +84,7 @@ function BordersMenu(MyappedComponent) {
                           >
                             {
                               val.vals ? val.vals.map((val1, key1) => {
-                                return <Menu.Item title={val1.name} url={val1.url} key={key + '-' + key1}>
+                                return <Menu.Item title={val1.name} url={val1.url} key={val1.url}>
                                         <NavLink to={val1.url}>
                                           {val1.name}
                                         </NavLink>

@@ -24,10 +24,9 @@ class Login extends Component {
 
     componentDidMount(){
         //获取用户信息
-       
-        let obj = cookie.Get();
+        let obj = cookie.Get('user');
 
-        if(obj.user){
+        if(obj && obj.user){
             let user = obj.user;
             let UserPassword = "";
             if(user.memory){
@@ -71,12 +70,13 @@ class Login extends Component {
                 debugger
             
                 if(params.data.flag){
+                    cookie.remove('user')
                      //登录成功
                     let password = ""
                     if(this.state.memory){
                         password = params.data.password
                     }
-                    cookie.Set({
+                    cookie.Set('user',{
                         user:{
                             UserName:params.data.username,
                             UserPassword:password,

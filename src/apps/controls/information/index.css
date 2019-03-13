@@ -1,0 +1,209 @@
+
+.information{
+
+}
+
+
+
+.information .tableStyle{
+    margin-top: 2px;
+    /* font-size: 12px; */
+    line-height: 22px;
+    width: 100%;
+}
+
+.information .valid{
+    height: 22px;
+    line-height: 22px;
+    /* width: 142px; */
+}
+  
+.information .ant-upload-list-picture-card .ant-upload-list-item{
+    width: 120px;
+    height: 140px;
+} 
+.information .ant-upload.ant-upload-select-picture-card{
+    width: 120px;
+    height: 140px;
+}
+
+.information .dhxtabbar_base_dhx_web{
+    height: 270px;
+    margin-top: 20px;
+}
+
+
+.information .dhxtabbar_cont{
+    position: relative;
+    left: 0px;
+    width: 100%;
+    top: 0px;
+    height: 270px;
+}
+
+.information .dhxtabbar_tabs_top{
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    bottom: auto;
+    height: 32px;
+    overflow: hidden;
+    background-color: #dcdfe2;
+    border: none;
+    z-index: 2;
+}
+
+.information .dhxtabbar_tabs_base{
+
+    position: absolute;
+    top: 0px;
+    height: 32px;
+    overflow: hidden;
+}
+.information .dhxtabbar_tab{
+    width: 95px;
+    height: 27px;
+    float: left;
+    margin-top: 5px;
+    text-align: center;
+    margin-left: 8px;
+    background-color: #fff;
+}
+.information .dhxtabbar_tab:hover{
+    background-color: #fff;
+    color: #000000;
+    height: 27px;
+}
+
+.information .dhxtabbar_tab_actv{
+    background-color: #d1d2d4;
+    color: #000000;
+    height: 27px;
+    z-index: 3;
+    cursor: pointer;
+}
+.information .dhxtabbar_tab_text{
+    color: black;
+}
+.information .dhxtabbar_tabs_cont_left{
+    left: 0;
+    transition: left 0.15s ease 0s;
+    position: absolute;
+    width: 100%;
+    height: 32px;
+    margin: 0px 1px;
+    top: 0px;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    -ms-transform: translate3d(0, 0, 0);
+    -o-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.information .dhx_cell_tabbar{
+    visibility: visible;
+    z-index: 1;
+    left: 0px;
+    top: 32px;
+    width: 100%;
+    height: 268px;
+    position: relative;
+    background-color: #fff;
+    margin: 0px;
+    padding: 0px;
+    overflow-y: auto;
+    cursor: default;
+}
+.information .sub_selectedAccLevel{
+    width: 199px;
+    height: 190px;
+    padding-left: 8px;
+    overflow: auto;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+.information .selected_accLevel{
+    float: left;
+    /* width: 210px;
+    height: 230px;
+    overflow: hidden; */
+    /* overflow: hidden; */
+}
+.information .selected_accLevel_fieldset{
+    border: 1px solid rgb(221, 221, 221);
+    margin: 0px;
+    padding: 0px;
+    font-size: 8px;
+    color: black;
+}
+
+.information .sub_selectedAccLevel_checkbox{
+    width: 100%;
+    height: 30px;
+}
+.information .ant-checkbox-group{
+    position: relative;
+
+}
+
+.information .selected_accLevel_button{
+    float: left;
+    margin-top: 8px;
+    margin-left: 5px;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.information .tableStyle_tbody{
+    margin-top: 2px;
+    height: 99%;
+    float: right;
+    width: 460px;
+    /* background-color: aliceblue; */
+}
+.displayNone{
+    display: none;
+}
+.warningColor{
+    color: #E57A14;
+}
+
+.information .registration{
+
+}
+
+.information .detailed_information{
+    width: 100%;
+    height: 100%;
+}
+
+.information .certificates{
+    font-size: 20px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+
+.box{position:absolute;width:450px;left:50%;height:auto;z-index:100;border:1px #ddd solid;padding:1px;}
+.box h2{height:10px;font-size:14px;position:relative;padding-left:10px;line-height:10px;color:#fff;}
+.box h2 a{position:absolute;right:5px;font-size:12px;color:#fff;}
+.box .list{padding:10px;}
+.box .list li{height:24px;line-height:24px;}
+.box .list li a{color:#aaa;}
+.box .list li span{margin:0 5px 0 0;font-family:"宋体";font-size:12px;font-weight:400;color:#ddd;}
+.showbtn {font:bold 24px '微软雅黑';}
+#bg{background-color:#000000;position:absolute;z-index:99;left:0;top:0;display:none;width:100%;height:100%;opacity:0.3;filter: alpha(opacity=50);-moz-opacity: 0.3;}

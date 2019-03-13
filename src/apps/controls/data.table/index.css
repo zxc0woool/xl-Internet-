@@ -54,3 +54,26 @@
   
 }
 
+
+.data-table .tableStyle td{
+  height: 32px;
+}
+
+
+
+
+
+.data-table .tableStyle th{
+ 
+  vertical-align: top;
+  /* background-color: #a4bed4; */
+  padding: 1px 10px;
+  min-width: 100px;
+  max-width: 150px;
+  width: auto;
+  text-align: left;
+}
+.data-table .content_div{
+  /* padding: 5px; */
+}
+

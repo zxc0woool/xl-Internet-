@@ -1,3 +1,32 @@
 .rygl-zw{
   
 }
+.rygl-zw-data{
+    float: left;
+    width: 100%;
+}
+.rygl-zw-data-datatree{
+    float: left;
+    width: 19%;
+    height: 732px;
+    margin-right: 10px;
+}
+.rygl-zw-data-datatable{
+    width: 80%;
+    height: 732px;
+    float: left;
+}
+.rygl-zw-operation a{
+    margin-left: 6px
+}
+.rygl_zw_newly_added{
+    height: 170px;
+}
+.rygl_zw_tableStyle label{
+    float: left;
+    width: 80px;
+    display: block;
+}
+.rygl_zw_tableStyle_div{
+    margin: 6px auto;
+}

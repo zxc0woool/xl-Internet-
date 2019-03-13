@@ -29,3 +29,45 @@
 .borders_menu .ant-layout{
     background:transparent
 }
+
+.borders_menu .ant-input{
+    height: 24px !important;
+    line-height: 24px !important;
+    width: 150px !important;
+    padding: 4px 6px !important;
+}
+.borders_menu .ant-select{
+height: 24px !important;
+line-height: 24px !important;
+width: 150px !important;
+padding: 4px 6px !important;
+}
+.borders_menu textarea .ant-input{
+resize: none;
+}
+
+.ant-select-dropdown{
+width: 150px !important;
+
+}
+.borders_menu .ant-select-selection--single{
+height: 24px !important;
+line-height: 24px !important;
+width: 150px !important;
+padding: 4px 6px !important;
+margin-left: -6px !important;
+margin-top: -4px !important;
+}
+.borders_menu .ant-select-selection__rendered{
+line-height: 12px !important;
+margin-left: 0px !important;
+}
+.borders_menu .ant-select-dropdown-menu-item{
+height: 30px !important;
+line-height: 24px !important;
+width: 150px !important;
+padding: 4px 6px !important;
+}
+.borders_menu .ant-select-tree-dropdown{
+    width: 150px;
+}

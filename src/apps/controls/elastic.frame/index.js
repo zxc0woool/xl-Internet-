@@ -1,10 +1,11 @@
 
 
 import React, { Component } from 'react';
-import { Icon } from 'antd';
-import $ from 'jquery'
-import Echarts from 'echarts';
+import { Icon, Button } from 'antd';
+// import $ from 'jquery'
+// import Echarts from 'echarts';
 import './index.css';
+
 
 
 
@@ -23,25 +24,26 @@ class ElasticFrame extends Component {
 
     // let dom = document.getElementById('elastic-frame-dhxwin_hdr-div');
   
-    this.dragAndDrop(document.getElementById('elastic-frame-dhxwin_hdr-div'));
+    this.dragAndDrop();
   }
 
   //拖拽功能
   /**
    * mod
    */
-  dragAndDrop=(mod)=>{
-    mod.onmousedown = function (ev) {
-      let oevent = ev;
+  dragAndDrop=()=>{
+    let mod = document.getElementById('elastic-frame-dhxwin_hdr-div')
+    let mod2 = document.getElementById('elastic-frame-dhxwin_hdr')
+    mod2.onmousedown = function (ev) {
 
-      let distanceX = oevent.clientX - mod.offsetLeft;
-      let distanceY = oevent.clientY - mod.offsetTop;
+      let distanceX = ev.clientX - mod.offsetLeft;
+      let distanceY = ev.clientY - mod.offsetTop;
 
       document.onmousemove = function (ev) {
-        let oevent = ev;
-        mod.style.left = oevent.clientX - distanceX + 'px';
-        mod.style.top = oevent.clientY - distanceY + 'px';
+        mod.style.left = ev.clientX - distanceX + 'px';
+        mod.style.top = ev.clientY - distanceY + 'px';
       };
+
       document.onmouseup = function () {
         document.onmousemove = null;
         document.onmouseup = null;
@@ -54,7 +56,7 @@ class ElasticFrame extends Component {
 
     return (
       <div className="elastic-frame">
-        <div className="dhxwin_active" id={'elastic-frame-dhxwin_hdr-div'}>
+        <div className="dhxwin_active" style={this.props.style} id={'elastic-frame-dhxwin_hdr-div'}>
           {/* <div className="dhxwin_hdr"></div> */}
           <div className="dhxwin_hdr" id={'elastic-frame-dhxwin_hdr'}>
             <div className="dhxwin_text">
@@ -71,6 +73,11 @@ class ElasticFrame extends Component {
             {
               this.props.renderDom()
             }
+          </div>
+          <div className="elastic_button">
+
+              <Button>确定</Button>
+              <Button onClick={this.props.close}>取消</Button>
           </div>
 
         </div>

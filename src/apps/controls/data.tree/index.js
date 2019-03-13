@@ -14,34 +14,9 @@ class DataTree extends Component {
     super(props);
     this.state = {
       defaultExpandAll:true,
-      toDefaultExpandAll:false,
       checkedKeys:[],
-      datalist:[
-        {
-          name: '部门名称',
-          value: '部门名称',
-          children: [
-            {
-              name: '市场部',
-              value: '市场部',
-              children: [
-                { name: '采购部', value: '部门名称>市场部>采购部' }
-              ]
-            },
-            { name: '研发部', value: '部门名称>研发部' },
-            { name: '财务部', value: '部门名称>财务部' },
-            { name: '维修部', value: '部门名称>维修部' },
-            { name: '证卡部', value: '部门名称>证卡部' }
-          ]
-        },
-        {
-          name: '技术',
-          value: '技术',
-          children: [
-            { name: '研发部', value: '技术>研发部' },
-            { name: '维修部', value: '技术>维修部' }
-          ]
-        }
+      leftDatalist:[
+       
       ]
     }
 
@@ -84,7 +59,6 @@ class DataTree extends Component {
 
   onSelect = (selectedKeys, info) => {
     
-  
     console.log('selected', selectedKeys, info);
   }
 
@@ -142,7 +116,7 @@ class DataTree extends Component {
             onExpand={this.onExpand}
           >
               {
-                this.TreeNode(this.state.datalist)
+                this.TreeNode(this.props.leftDatalist)
               }
 
           </Tree>

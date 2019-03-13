@@ -68,8 +68,8 @@ function HeadNavigationBar(MyappedComponent) {
     }
     componentDidMount() {
       //获取用户信息
-      let obj = cookie.Get();
-      if (obj.user) {
+      let obj = cookie.Get('user');
+      if (obj && obj.user) {
         let user = obj.user;
         this.setState({
           UserName: user.UserName
@@ -144,7 +144,7 @@ function HeadNavigationBar(MyappedComponent) {
             </div>
 
           </div>
-          <MyappedComponent  {...this.state} />
+          <MyappedComponent {...this.props} {...this.state} />
         </div>
 
       );

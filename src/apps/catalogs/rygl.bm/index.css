@@ -1,3 +1,32 @@
 .rygl-bm{
   
 }
+.rygl-bm-data{
+    float: left;
+    width: 100%;
+}
+.rygl-bm-data-datatree{
+    float: left;
+    width: 19%;
+    height: 732px;
+    margin-right: 10px;
+}
+.rygl-bm-data-datatable{
+    width: 80%;
+    height: 732px;
+    float: left;
+}
+.rygl-bm-operation a{
+    margin-left: 6px
+}
+.rygl_bm_newly_added{
+    height: 170px;
+}
+.rygl_bm_tableStyle label{
+    float: left;
+    width: 80px;
+    display: block;
+}
+.rygl_bm_tableStyle_div{
+    margin: 6px auto;
+}
