@@ -98,6 +98,7 @@ function HeadNavigationBar(MyappedComponent) {
 
     }
 
+   
  
 
     render() {

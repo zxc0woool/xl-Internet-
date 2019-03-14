@@ -1,3 +1,29 @@
 .bcgl-sjd{
   
 }
+.bcgl-sjd-data{
+    float: left;
+    width: 100%;
+}
+.bcgl-sjd-data-datatable{
+    width: 100%;
+    height: 732px;
+    float: left;
+}
+.bcgl-sjd-operation a{
+    margin-left: 6px
+}
+.bcgl-sjd_newly_added{
+    height: 170px;
+}
+.bcgl-sjd_tableStyle label{
+    float: left;
+    width: 80px;
+    display: block;
+}
+.bcgl-sjd_tableStyle_div{
+    margin: 6px auto;
+}
+.bcgl-sjd-operation{
+    
+}

@@ -155,7 +155,7 @@ class RyglLzry extends Component {
                       newlyPopup: { switch: false }
                     })
                   }}
-                  renderDom={() => {
+                  renderDom={(props) => {
                     return (
                       <div className="rygl_bm_newly_added">
 
@@ -172,7 +172,6 @@ class RyglLzry extends Component {
                               <Option value='lucy3'>调离</Option>
                             </Select>
                           </div>
-
 
                           <div className="rygl_bm_tableStyle_div">
                             <label>离职原因</label>
@@ -193,8 +192,8 @@ class RyglLzry extends Component {
                         newlyPopup: { switch: false }
                       })
                     }}
-                    renderDom={() => {
-                      return <Information toUserID={false} {...this.props} />
+                    renderDom={(props) => {
+                      return <Information toUserID={false}  {...props} {...this.props} />
                     }}
                   /> : ""
               :

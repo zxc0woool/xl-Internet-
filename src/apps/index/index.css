@@ -89,8 +89,8 @@
     color: #474b4f;
 }
 .tab_head_cla li{
-    float: left;
     min-width: 80px;
+    float: left;
     text-align: center;
     cursor: pointer;
     margin-bottom: 5px;

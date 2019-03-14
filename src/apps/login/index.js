@@ -58,7 +58,12 @@ class Login extends Component {
         })
     }
     onLogin(){
+            Util._httpPost("/project_war_exploded/department/findDepartmentAll.do", {
 
+                }).then((params) => {
+
+                    debugger
+                })
 
 
         if(this.state.UserName !== "" && this.state.UserPassword !== ""){
@@ -70,7 +75,7 @@ class Login extends Component {
                 debugger
             
                 if(params.data.flag){
-                    cookie.remove('user')
+                    cookie.remove('user');
                      //登录成功
                     let password = ""
                     if(this.state.memory){

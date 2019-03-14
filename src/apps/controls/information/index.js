@@ -103,17 +103,6 @@ class Information extends Component {
   
   }
 
-  onGetImage = (url) =>{
-   
-  }
-  ToFingerprint = (e,v) =>{
-
-    this.setState({
-      tofingerprint: v,
-    });
-  }
-
-
   render() {
 
     const { previewVisible, previewImage, fileList } = this.state;
@@ -237,7 +226,7 @@ class Information extends Component {
                         <label>证件号码</label>
                       </th>
                       <td colSpan="2">
-                        <Input type="text" maxLength={30} /><span title={"读取身份证"} onClick={(e)=>this.ToFingerprint(e,true)} className="certificates"><Icon type="idcard" /></span>
+                        <Input type="text" maxLength={30} /><span title={"读取身份证"} className="certificates"><Icon type="idcard" /></span>
                       </td>
                     </tr>
                     <tr>
@@ -266,7 +255,7 @@ class Information extends Component {
                         生物模板数
                             </th>
                       <td>
-                        <img src={IcoFingerprint} /> {0}
+                        <img title="生物模板数" className="information_biotemplate" onClick={(e)=>this.props.ToFingerprint(e,true)} src={IcoFingerprint} /> {0}
                       </td>
 
                     </tr>
@@ -952,7 +941,8 @@ class Information extends Component {
 
         </div>
         {
-          this.state.tofingerprint?<Fingerprint onGetImage={this.onGetImage} />:''
+          //this.props.state.tofingerprint
+          this.props.state.tofingerprint?<Fingerprint ToFingerprint={this.props.ToFingerprint} />:''
         }
         
       </div>

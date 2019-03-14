@@ -1,3 +1,30 @@
 .kqsb-qy{
   
 }
+
+.kqsb-qy-data{
+    float: left;
+    width: 100%;
+}
+.kqsb-qy-data-datatable{
+    width: 100%;
+    height: 732px;
+    float: left;
+}
+.kqsb-qy-operation a{
+    margin-left: 6px
+}
+.kqsb-qy_newly_added{
+    height: 170px;
+}
+.kqsb-qy_tableStyle label{
+    float: left;
+    width: 80px;
+    display: block;
+}
+.kqsb-qy_tableStyle_div{
+    margin: 6px auto;
+}
+.kqsb-qy-operation{
+    
+}

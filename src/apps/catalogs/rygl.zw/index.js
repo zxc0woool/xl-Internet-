@@ -188,7 +188,7 @@ class RyglZw extends Component {
                       newlyPopup: { switch: false }
                     })
                   }}
-                  renderDom={() => {
+                  renderDom={(props) => {
                     return (
                       <div className="rygl_zw_newly_added">
 

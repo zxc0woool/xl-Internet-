@@ -14,10 +14,19 @@ class ElasticFrame extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: ''
+      value: '',
+      tofingerprint:false
 
     };
 
+  }
+
+   
+  ToFingerprint = (e,v) =>{
+
+    this.setState({
+      tofingerprint: v,
+    });
   }
 
   componentDidMount() {
@@ -63,15 +72,19 @@ class ElasticFrame extends Component {
               <div className="dhxwin_text_inside">{this.props.title}</div>
             </div>
             <div className="dhxwin_btns">
-              <div title="关闭" className="dhxwin_button dhxwin_button_close" onClick={this.props.close}>
-                <Icon type="close" title="关闭" />
-              </div>
+              {
+                !this.state.tofingerprint?
+                <div title="关闭" className="dhxwin_button dhxwin_button_close" onClick={this.props.close}>
+                  <Icon type="close" title="关闭" />
+                </div>:''
+              }
+             
             </div>
           </div>
 
           <div className="dhx_cell_wins">
             {
-              this.props.renderDom()
+              this.props.renderDom(this)
             }
           </div>
           <div className="elastic_button">

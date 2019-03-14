@@ -185,7 +185,7 @@ class RyglBm extends Component {
                       newlyPopup: { switch: false }
                     })
                   }}
-                  renderDom={() => {
+                  renderDom={(props) => {
                     return (
                       <div className="rygl_bm_newly_added">
 

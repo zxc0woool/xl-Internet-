@@ -1,3 +1,65 @@
 .bcgl-pc{
   
 }
+
+.bcgl-pc-data{
+    float: left;
+    width: 100%;
+}
+.bcgl-pc-data-datatable{
+    width: 80%;
+    height: 732px;
+    float: left;
+}
+.bcgl-pc-operation a{
+    margin-left: 6px
+}
+.bcgl-pc_newly_added{
+    height: 170px;
+}
+.bcgl-pc_tableStyle label{
+    float: left;
+    width: 80px;
+    display: block;
+}
+.bcgl-pc_tableStyle_div{
+    margin: 6px auto;
+}
+.bcgl-pc-operation{
+    
+}
+.bcgl-pc-right-data-datatable{
+    width: 19%;
+    height: 732px;
+    float: right;
+    border: 1px double #e8e8e8;
+}
+
+.bcgl-pc-date-data-datatable{
+    width: 100%;
+    height: 700px;
+    
+}
+.bcgl-pc-date-data-datatable span{
+    width: 100%;
+    height: 26px;
+    line-height: 26px;
+    float: left;
+    margin: 5px;
+}
+.bcgl-pc-date-data-datatable div{
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+
+
+.bcgl-pc-first-child{
+    height: 32px;
+    line-height: 32px;
+    min-width: 200px;
+    padding: 0px 5px;
+    border-bottom: 1px solid #dcdfe2;
+    background-color: #dcdfe2;
+    font-size: 14px;
+}

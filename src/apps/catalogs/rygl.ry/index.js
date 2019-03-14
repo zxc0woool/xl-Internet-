@@ -204,8 +204,8 @@ class RyglRy extends Component {
                       newlyPopup: { switch: false }
                     })
                   }}
-                  renderDom={() => {
-                    return <Information toUserID={this.state.newlyPopup.title === "编辑"} {...this.props}/>
+                  renderDom={(props) => {
+                    return <Information toUserID={this.state.newlyPopup.title === "编辑"} {...props} {...this.props}/>
                   }}
                 />:
                 this.state.newlyPopup.title === "离职"?
@@ -217,7 +217,7 @@ class RyglRy extends Component {
                       newlyPopup: { switch: false }
                     })
                   }}
-                  renderDom={() => {
+                  renderDom={(props) => {
                     return (
                       <div className="content_div">
                         <table className="tableStyle">
@@ -259,7 +259,7 @@ class RyglRy extends Component {
                       newlyPopup: { switch: false }
                     })
                   }}
-                  renderDom={() => {
+                  renderDom={(props) => {
                     return (
                       <div className="">
                           <table className="tableStyle">
@@ -313,7 +313,7 @@ class RyglRy extends Component {
                       newlyPopup: { switch: false }
                     })
                   }}
-                  renderDom={() => {
+                  renderDom={(props) => {
                     return (
                       <div className="">
                           <table className="tableStyle">
