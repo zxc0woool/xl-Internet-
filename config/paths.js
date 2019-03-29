@@ -16,6 +16,7 @@ function ensureSlash(inputPath, needsSlash) {
   if (hasSlash && !needsSlash) {
     return inputPath.substr(0, inputPath.length - 1);
   } else if (!hasSlash && needsSlash) {
+    console.log('>>>>>>>>>>>>>>>>>>>' + inputPath)
     return `${inputPath}/`;
   } else {
     return inputPath;

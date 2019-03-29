@@ -18,7 +18,7 @@
 .data-tree .first-child{
     height: 32px;
     line-height: 32px;
-    min-width: 200px;
+    /* min-width: 200px; */
     padding: 0px 5px;
     border-bottom: 1px solid #dcdfe2;
     background-color: #dcdfe2;

@@ -16,9 +16,9 @@
 .bcgl-sjd_newly_added{
     height: 170px;
 }
-.bcgl-sjd_tableStyle label{
+.bcgl-sjd_tableStyle .tableStyle label{
     float: left;
-    width: 80px;
+    width: 110px;
     display: block;
 }
 .bcgl-sjd_tableStyle_div{
@@ -26,4 +26,8 @@
 }
 .bcgl-sjd-operation{
     
+}
+
+.bcgl-sjd_tableStyle .tableStyle{
+
 }

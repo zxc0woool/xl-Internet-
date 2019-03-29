@@ -1,43 +1,69 @@
 
 
 import React, { Component } from 'react';
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Input } from 'antd';
 import { NavLink } from 'react-router-dom'
 import './index.css';
-import RouterMap from '../catalogs/router'
+// import RouterMap from '../catalogs/router'
 const { Header, Content, Footer, Sider } = Layout;
 const SubMenu = Menu.SubMenu;
 
-
-function BordersMenu(MyappedComponent) {
+function BordersMenu(MyappedComponent, page) {
   return class BordersMenu extends Component {
 
     constructor(props) {
       super(props);
       this.state = {
         collapsed: false,
-        current: '/pers/rygl_ry',
+        current: '/rygl_ry',
         Url: '',
         JumpUrl: '',
         JumpName: '',
-        JumpTitle: ''
+        JumpTitle: '',
+        conditionQueryList: []
       };
 
     }
 
     componentDidMount() {
 
-      this.setState({ current: this.props.location.pathname});
+      let JumpName = { name: '', key: '' };
+      // this.catalogMapKey(this.props.catalog.att, this.props.location.pathname, JumpName);
+      this.setState({
+        current: this.props.location.pathname === "/pers" ? "/rygl_ry" :
+          this.props.location.pathname === "/att" ? "/kqsb_qy" :
+            this.props.location.pathname,
+        JumpUrl: this.props.location.pathname,
+        JumpName: JumpName.name,
+        JumpTitle: JumpName.key
+      });
     }
-   
- 
+    componentDidUpdate() {
+
+
+    }
+
+    catalogMapKey(_data, url, JumpName) {
+      for (let key in _data) {
+        if (_data[key].url === url) {
+          JumpName.name = _data[key].name;
+        }
+        if (_data[key].vals && _data[key].vals.length > 0) {
+          this.catalogMapKey(_data[key].vals, url, JumpName);
+          if (JumpName.name !== "" && JumpName.key === "") {
+            JumpName.key = _data[key].name;
+          }
+        }
+      }
+    }
+
     onCollapse = (collapsed) => {
       this.setState({ collapsed });
     }
 
     handleClick = (e) => {
-      console.log(e);
-     
+      // console.log(e);
+
       this.setState({
         current: e.key,
         JumpUrl: e.item.props.url,
@@ -46,14 +72,19 @@ function BordersMenu(MyappedComponent) {
       });
     }
 
+    conditionQuery = (conditionQueryList) => {
 
+      this.setState({ conditionQueryList: conditionQueryList })
+
+    }
 
 
     render() {
 
-      let str = "";
+      let JumpTitle, str = "";
       if (this.props.url !== "") {
-        str = this.props.url.substr(1);
+        str = this.props.url.substr(1)
+        JumpTitle = this.state.JumpTitle === '' ? this.props.catalog[str][0].name : this.state.JumpTitle;
       }
 
       return (
@@ -73,23 +104,20 @@ function BordersMenu(MyappedComponent) {
                     <Menu theme="dark"
                       onClick={this.handleClick.bind(this)}
                       selectedKeys={[this.state.current]}
-                      defaultOpenKeys={[this.props.catalog[str][0].name,this.props.catalog[str][0].key]}
+                      defaultOpenKeys={[JumpTitle]}
                       mode="inline">
                       {
                         this.props.catalog[str].map((val, key) => {
 
-                          return <SubMenu
+                          return val.url ? <Menu.Item title={val.name} url={val.url} key={val.url}>{val.name}</Menu.Item>:<SubMenu
                             key={val.name}
                             title={<span><Icon type={val.icon} /><span>{val.name}</span></span>}
                           >
                             {
                               val.vals ? val.vals.map((val1, key1) => {
                                 return <Menu.Item title={val1.name} url={val1.url} key={val1.url}>
-                                        <NavLink to={val1.url}>
-                                          {val1.name}
-                                        </NavLink>
-                                
-                                       </Menu.Item>
+                                  {val1.name}
+                                </Menu.Item>
                               })
                                 :
                                 ''
@@ -107,16 +135,21 @@ function BordersMenu(MyappedComponent) {
 
                   </Sider>
                   <Layout>
-                    <Header style={{ background: '#fff', padding: 0 }} />
+
                     <Content style={{ margin: '0 16px' }}>
-                      <Breadcrumb style={{height: 30, borderBottom: '1px solid #e8e8e8' }}>
+                      <Breadcrumb style={{ marginTop: 10, height: 30, borderBottom: '1px solid #e8e8e8' }}>
                         <Breadcrumb.Item><MyappedComponent /></Breadcrumb.Item>
-                        <Breadcrumb.Item>{this.state.JumpTitle === ''?this.props.catalog[str][0].name:this.state.JumpTitle}</Breadcrumb.Item>
-                        <Breadcrumb.Item>{this.state.JumpName === ''?this.props.catalog[str][0].vals[0].name:this.state.JumpName}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{this.state.JumpTitle === '' ? this.props.catalog[str][0].name : this.state.JumpTitle}</Breadcrumb.Item>
+                        <Breadcrumb.Item>{this.state.JumpName === '' ? this.props.catalog[str][0].vals[0].name : this.state.JumpName}</Breadcrumb.Item>
                       </Breadcrumb>
                       <div style={{ background: '#fff', minHeight: 730 }}>
-                          <RouterMap />
-                     
+                        {/* {
+                          RouterPageMap?<RouterPageMap {...this}/>:''
+                        } */}
+                        {/* <MyappedComponent {...this}/> */}
+                        {
+                          page(this.state.current)
+                        }
                       </div>
                     </Content>
                     <Footer style={{ textAlign: 'center' }}>

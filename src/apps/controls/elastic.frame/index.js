@@ -36,11 +36,21 @@ class ElasticFrame extends Component {
     this.dragAndDrop();
   }
 
+  componentDidUpdate(){
+    
+  }
+
+  ok = () => {
+
+
+  }
+
   //拖拽功能
   /**
    * mod
    */
   dragAndDrop=()=>{
+    
     let mod = document.getElementById('elastic-frame-dhxwin_hdr-div')
     let mod2 = document.getElementById('elastic-frame-dhxwin_hdr')
     mod2.onmousedown = function (ev) {
@@ -48,14 +58,14 @@ class ElasticFrame extends Component {
       let distanceX = ev.clientX - mod.offsetLeft;
       let distanceY = ev.clientY - mod.offsetTop;
 
-      document.onmousemove = function (ev) {
+      mod.onmousemove = function (ev) {
         mod.style.left = ev.clientX - distanceX + 'px';
         mod.style.top = ev.clientY - distanceY + 'px';
       };
 
-      document.onmouseup = function () {
-        document.onmousemove = null;
-        document.onmouseup = null;
+      mod.onmouseup = function () {
+        mod.onmousemove = null;
+        mod.onmouseup = null;
       };
     }
   }
@@ -89,7 +99,7 @@ class ElasticFrame extends Component {
           </div>
           <div className="elastic_button">
 
-              <Button>确定</Button>
+              <Button disabled={this.props.titleText !== ""} onClick={this.props.ok}>确定</Button>
               <Button onClick={this.props.close}>取消</Button>
           </div>
 

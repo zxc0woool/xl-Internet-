@@ -38,13 +38,13 @@ class DataTree extends Component {
       list.push(this.state.checkedKeys[i]);
     }
     if(info.expanded){
-      list.push(info.node.props.title)
+      list.push(info.node.props.eventKey)
       this.setState({
         checkedKeys:list
       })
     }else{
       for(let i in list){
-        if(list[i] === info.node.props.title){
+        if(list[i] === info.node.props.eventKey){
           list.splice(i, 1);
         }
       }
@@ -58,13 +58,17 @@ class DataTree extends Component {
   }
 
   onSelect = (selectedKeys, info) => {
-    
-    console.log('selected', selectedKeys, info);
+
+    if(this.props.ongetfindAllByDepartment){
+      this.props.ongetfindAllByDepartment(info.node.props);
+    }
+   
+    // console.log('selected', selectedKeys, info);
   }
 
 
   onClickDefaultExpandAllYes = () => {
- 
+
     this.setState({
       checkedKeys:datalistkey.list
     })
@@ -79,17 +83,17 @@ class DataTree extends Component {
 
   TreeNode = (datalist) => {
     return datalist.map((_d) => {
-
-      if(!datalistkey.data[_d.value] && _d.children){
-        datalistkey.data[_d.value] = _d.value
-        datalistkey.list.push(_d.value)
+      let key = _d.name + '_' + _d.id;
+      if(!datalistkey.data[key] && _d.children.length > 0 ){
+        datalistkey.data[key] = key
+        datalistkey.list.push(key)
       }
     
       return (
-        <TreeNode title={_d.name} key={_d.value} isLeaf={_d.children ? false : true}>
+        <TreeNode title={_d.name} id={_d.id} key={key} isLeaf={_d.children.length > 0  ? false : true}>
           {
 
-            _d.children ? this.TreeNode(_d.children) : ''
+            _d.children.length > 0 ? this.TreeNode(_d.children) : ''
             
           }
         </TreeNode>
@@ -107,7 +111,7 @@ class DataTree extends Component {
           <Icon type="plus-square" onClick={this.onClickDefaultExpandAllYes} title="展开" />
           <Icon type="minus-square" onClick={this.onClickDefaultExpandAllNo} title="收起" />
         </div>
-        <div className="dhx_cell_layout">
+        <div className="dhx_cell_layout" style={this.props.style}>
 
           <Tree
             showLine

@@ -1,0 +1,28 @@
+.bcgl_bmpb{
+  float: left;
+  height: 100%;
+  width: 100%;
+}
+.bcgl_bmpb-data{
+  float: left;
+  width: 100%;
+}
+.bcgl_bmpb-data-datatree{
+  float: left;
+  width: 19%;
+  height: 732px;
+  margin-right: 10px;
+}
+.bcgl_bmpb-data-datatable{
+  width: 79%;
+  height: 732px;
+  float: left;
+  overflow-x: hidden;
+}
+.bcgl-pc_newly_added{
+  width: 100%;
+}
+
+.tjbb-ytjbb-head{
+  
+}

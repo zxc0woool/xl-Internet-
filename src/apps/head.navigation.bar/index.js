@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom'
-
+import Util from '../../uilt/http.utils'; 
 import cookie from '../../uilt/cookie';
 import logo from '../../images/login/logo.png';
 import './index.css';
@@ -24,10 +24,10 @@ function HeadNavigationBar(MyappedComponent) {
               icon:'user',
               use:true,
               vals:[
-                {name:'人员',url:'/pers/rygl_ry'},
-                {name:'部门',url:'/pers/rygl_bm'},
-                {name:'职位',url:'/pers/rygl_zw'},
-                {name:'离职人员',url:'/pers/rygl_lzry'}
+                {name:'人员',url:'/rygl_ry'},
+                {name:'部门',url:'/rygl_bm'},
+                {name:'职位',url:'/rygl_zw'},
+                {name:'离职人员',url:'/rygl_lzry'}
               ]
             }
           ],
@@ -37,8 +37,8 @@ function HeadNavigationBar(MyappedComponent) {
               icon:'credit-card',
               key:'att',
               vals:[
-                {name:'区域',url:'/att/kqsb_qy'},
-                {name:'设备',url:'/att/kqsb_sb'}
+                {name:'区域',url:'/kqsb_qy'},
+                {name:'设备',url:'/kqsb_sb'}
               ]
             },
             {
@@ -46,8 +46,17 @@ function HeadNavigationBar(MyappedComponent) {
               icon:'file-protect',
               key:'att',
               vals:[
-                {name:'时间段',url:'/att/bcgl_sjd'},
-                {name:'班次',url:'/att/bcgl_pc'}
+                {name:'时间段',url:'/bcgl_sjd'},
+                {name:'班次',url:'/bcgl_pc'}
+              ]
+            },
+            {
+              name:'排班管理',
+              icon:'solution',
+              key:'att',
+              vals:[
+                {name:'部门排班',url:'/bcgl_bmpb'},
+                {name:'人员排班',url:'/bcgl_rypb'}
               ]
             },
             {
@@ -55,9 +64,13 @@ function HeadNavigationBar(MyappedComponent) {
               icon:'file-done',
               key:'att',
               vals:[
-                {name:'月明细报表',url:'/att/tjbb_ymxbb'},
-                {name:'月统计报表',url:'/att/tjbb_ytjbb'}
+                {name:'月明细报表',url:'/tjbb_ymxbb'},
+                {name:'月统计报表',url:'/tjbb_ytjbb'}
               ]
+            },
+            {
+              name:'补签单',
+              url:'/ycgl_bqd'
             }
           ],
         }
@@ -72,17 +85,20 @@ function HeadNavigationBar(MyappedComponent) {
       if (obj && obj.user) {
         let user = obj.user;
         this.setState({
-          UserName: user.UserName
+          UserName: user.name
         });
+       
       }
       //获取URL
       this.setState({
         url:this.props.match.url
       });
+
+     
     }
 
     componentWillReceiveProps() {
-
+      //跟踪地址
       if (this.props.history.location.pathname !== this.props.location.pathname) {
 
         this.props.history.push(this.props.history.location.pathname);
@@ -113,7 +129,7 @@ function HeadNavigationBar(MyappedComponent) {
                 selectedKeys={[this.state.current]}
                 mode="horizontal">
                 <Menu.Item title="人事" key="pers">
-                  <Link to="/pers/rygl_ry">
+                  <Link to="/pers">
                     <Icon type="user" />人事
                 </Link>
                 </Menu.Item>
@@ -121,7 +137,7 @@ function HeadNavigationBar(MyappedComponent) {
                   <Icon type="heat-map" />门禁
                 </Menu.Item> */}
                 <Menu.Item title="考勤" key="att">
-                  <Link to="/att/kqsb_qy">
+                  <Link to="/att">
                     <Icon type="solution" />考勤
                 </Link>
                 </Menu.Item>

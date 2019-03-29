@@ -1,5 +1,5 @@
 import React from "react"
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router'
 
 import RyglRy from './rygl.ry';         //人员页面
 import RyglRzry from './rygl.lzry';     //离职人员页面
@@ -18,9 +18,25 @@ import NotFound from "../not-found";
 class RouterMap extends React.Component {
     render() {
         return (
-            <BrowserRouter>
+            // <HashRouter>
+            //     <Switch>
+            //         <Route path='/pers/rygl_ry' component={RyglRy}></Route> 
+            //         <Route path='/pers/rygl_lzry' component={RyglRzry}></Route>
+            //         <Route path='/pers/rygl_bm' component={RyglBm}></Route>
+            //         <Route path='/pers/rygl_zw' component={RyglZw}></Route>
+            //         <Route path='/att/bcgl_pc' component={BcglPc}></Route>
+            //         <Route path='/att/bcgl_sjd' component={BcglSjd}></Route>
+            //         <Route path='/att/kqsb_qy' component={KqsbQy}></Route>
+            //         <Route path='/att/kqsb_sb' component={KqsbSb}></Route>
+            //         <Route path='/att/tjbb_ymxbb' component={TjbbYmxbb}></Route>
+            //         <Route path='/att/tjbb_ytjbb' component={TjbbYtjbb}></Route>
+            //         <Route component={NotFound}></Route>
+            //     </Switch>
+            // </HashRouter> 
+
+            <Router>
                 <Switch>
-                    <Route path='/pers/rygl_ry' component={RyglRy}></Route> 
+                    <Route path='/pers/rygl_ry' component={RyglRy}></Route>
                     <Route path='/pers/rygl_lzry' component={RyglRzry}></Route>
                     <Route path='/pers/rygl_bm' component={RyglBm}></Route>
                     <Route path='/pers/rygl_zw' component={RyglZw}></Route>
@@ -31,9 +47,10 @@ class RouterMap extends React.Component {
                     <Route path='/att/tjbb_ymxbb' component={TjbbYmxbb}></Route>
                     <Route path='/att/tjbb_ytjbb' component={TjbbYtjbb}></Route>
                     <Route component={NotFound}></Route>
+
                 </Switch>
-            </BrowserRouter>
-         
+            </Router>
+
         )
     }
 }

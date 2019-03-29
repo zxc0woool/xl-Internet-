@@ -33,7 +33,7 @@
 .borders_menu .ant-input{
     height: 24px !important;
     line-height: 24px !important;
-    width: 150px !important;
+    width: 150px;
     padding: 4px 6px !important;
 }
 .borders_menu .ant-select{
@@ -70,4 +70,23 @@ padding: 4px 6px !important;
 }
 .borders_menu .ant-select-tree-dropdown{
     width: 150px;
+}
+.borders_menu .ant-time-picker-input{
+    height: 24px !important;
+    line-height: 24px !important;
+    width: 150px !important;
+    padding: 4px 6px !important;
+}
+
+.borders_menu .ant-time-picker-icon{
+    right: -16px !important;
+}
+
+.query_condition{
+    height: 40px;
+    line-height: 40px;
+}
+.query_condition div{
+    float: left;
+    margin-right: 10px;
 }

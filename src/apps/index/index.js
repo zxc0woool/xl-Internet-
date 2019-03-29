@@ -217,6 +217,8 @@ class Index extends Component {
           moduleChartName: key
         })
         break;
+
+      default :
     }
   }
 

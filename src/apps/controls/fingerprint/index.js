@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import { Icon, Button } from 'antd';
 import BaseFpVerifyClearImage from '../../../images/src/base_fpVerify_clearImage.png';
 import Util from '../../../uilt/http.utils';
+import Zkbioonline from '../../../file/zkbioonline.exe'
+
 import './index.css';
 
 let collCount = '';
@@ -27,14 +29,19 @@ export default class Fingerprint extends Component {
     
     // this.beginCapture()
 
-    this.getWebServerInfo(null, null, "1");
+    // this.getWebServerInfo(null, null, "1");
 
-    this.cancelCapture();
+    // this.cancelCapture();
+    this.ok()
   }
 
   componentDidUpdate() {
 
 
+  }
+
+  componentWillUnmount(){
+    this.cancelCapture();
   }
 
   onGetImage = (previewImage) =>{
@@ -47,6 +54,11 @@ export default class Fingerprint extends Component {
   }
 
   printing = (explain) => {
+
+    if(this.props.isfingerprint){
+      this.props.printing(explain);
+    }
+   
     this.setState({ explain:explain })
   }
 
@@ -198,9 +210,8 @@ export default class Fingerprint extends Component {
         ret = _d.ret;
         if (ret === 0) {
           //录入指纹成功
-        
+          this.props.setPerFinger(_d.data.template);
           _this.printing("指纹登记成功");
-
         } else if (ret === -2003) {
           //录入指纹失败
           _this.printing("采集失败，请重新登记!");
@@ -251,10 +262,11 @@ export default class Fingerprint extends Component {
     })
 
   }
+
   render() {
 
     return (
-      <div className="fingerprint">
+      <div className="fingerprint" style={this.props.isfingerprint?{display:'none'}:{}}>
         
             <div>
               <div className='fingerprint_tips'>
@@ -269,7 +281,7 @@ export default class Fingerprint extends Component {
                 this.state.ToDrive?
                 ''
                 :
-                <div>驱动不存在</div>
+                <div>驱动不存在<a href={Zkbioonline}>下载驱动</a></div>
               }
               </div>
             </div>
@@ -288,7 +300,7 @@ export default class Fingerprint extends Component {
         
            <div className='fingerprint_button'>
                 <Button disabled={!this.state.ToDrive} onClick={this.ok}>开始采集</Button>
-                <Button onClick={this.cancelCapture}>取消采集</Button>
+                <Button disabled={!this.state.ToDrive} onClick={this.cancelCapture}>再次采集</Button>
                 <Button disabled={this.state.comparison} onClick={(e)=>this.props.ToFingerprint(e,false)}>关闭</Button>
            </div>
 

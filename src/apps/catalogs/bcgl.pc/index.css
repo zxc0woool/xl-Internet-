@@ -19,7 +19,7 @@
 }
 .bcgl-pc_tableStyle label{
     float: left;
-    width: 80px;
+    width: 100px;
     display: block;
 }
 .bcgl-pc_tableStyle_div{
@@ -62,4 +62,10 @@
     border-bottom: 1px solid #dcdfe2;
     background-color: #dcdfe2;
     font-size: 14px;
+}
+
+.bcgl-pc-choice{
+    width: 220px;
+    height: 350px;
+    float: right;
 }

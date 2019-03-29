@@ -18,6 +18,10 @@ class KqsbQy extends Component {
         title: "",
         switch: true,
       },
+      pagination:{
+        total:0,  //数据总数量
+        pageSize:50, //显示几条一页
+      },
       titlelist: [
         { name: '刷新', icon: 'redo' },
         { name: '新增', icon: 'file-add' },
@@ -49,6 +53,7 @@ class KqsbQy extends Component {
           title: '操作',
           dataIndex: 'operation',
           key: 'operation',
+          width: 100,
           render: () => {
             return (
               <div className="kqsb-qy-operation">
@@ -233,7 +238,23 @@ class KqsbQy extends Component {
                     renderDom={(props) => {
                       return <Information toUserID={false}  {...props} {...this.props} />
                     }}
-                  /> : ""
+                  /> :this.state.newlyPopup.title === "删除"?
+                  <ElasticFrame
+                    style={{ width: 280,height: 150}}
+                    title={"提示"}
+                    close={() => {
+                      this.setState({
+                        newlyPopup: { switch: false }
+                      })
+                    }}
+                    renderDom={(props) => {
+                      return (
+                        <div className="">
+                           你确定要执行删除操作吗？ 
+                        </div>
+                        )
+                    }}
+                  />:""
               :
               ""
           }

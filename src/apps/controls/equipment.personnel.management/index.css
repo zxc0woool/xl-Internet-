@@ -1,0 +1,95 @@
+.equipment_personnel_management{
+
+}
+.equipment_personnel_management .ant-table-fixed-header > .ant-table-content > .ant-table-scroll > .ant-table-body{
+    max-height: 300px !important;
+}
+.equipment_personnel_management .ant-table-scroll{
+    height: 334px;
+}
+
+.equipment_personnel_management .dhx_cell_layout{
+    height: 400px;
+}
+
+.equipment_personnel_management .rygl-ry-data{
+
+}
+
+.equipment_personnel_management .rygl-ry-data-datatree{
+    height: 500px;
+    width: 200px;
+}
+
+.equipment_personnel_management .rygl-ry-data-datatable{
+    width: 810px;
+    height: 500px;
+}
+.equipment_personnel_management .rygl-ry-data-datatree-equipment{
+    width: 204px;
+    float: right;
+}
+.equipment_personnel_management .photo_display{
+    background-color: rgba(0, 0, 0, 0);
+    height: 712px;
+    width: 1234px;
+    z-index: 1000;
+    position: absolute;
+}
+.equipment_personnel_management .photo_display_img{
+    float: left;
+    width: 240px;
+    height: 300px;
+    margin: 10px;
+}
+.equipment_personnel_management .photo_display_img img{
+    width: 100%;
+    height: 100%;
+}
+.equipment_personnel_management .photo_display .photo_body{
+
+}
+
+
+
+.rygl-ry-data-datatree-information {
+    height: 150px;
+    /* background-color: #b3cafb; */
+    float: left;
+    width: 100%;
+    margin-top: -60px;
+    font-size: 10px;
+}
+
+.rygl-ry-data-datatree-information fieldset{
+    float: left;
+}
+.rygl-ry-data-datatree-information .sub_selectedAccLevel{
+ 
+    height: 120px;
+}
+.rygl-ry-data-datatree-information textarea{
+    min-width: 1234px;
+    min-height: 120px !important;
+}
+
+.rygl-ry-data-datatree-information .selected_accLevel_fieldset{
+    float: left;
+}
+.rygl-ry-data-datatree-information .selected_accLevel_fieldset button{
+   margin-right: 10px
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

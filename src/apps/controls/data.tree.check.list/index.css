@@ -1,0 +1,38 @@
+.data-tree{
+ 
+}
+
+.dhx_cell_layout{
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 700px;
+    overflow: auto;
+    border: 1px solid #e8e8e8;
+
+  }
+.data-tree .first-child i:hover{
+    color: rgb(0, 0, 0) !important
+}
+
+.data-tree .first-child{
+    height: 32px;
+    line-height: 32px;
+    /* min-width: 200px; */
+    padding: 0px 5px;
+    border-bottom: 1px solid #dcdfe2;
+    background-color: #dcdfe2;
+    font-size: 20px;
+}
+
+.data-tree .ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected{
+  background-color: transparent;
+}
+.data-tree .ant-tree li .ant-tree-node-content-wrapper{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}

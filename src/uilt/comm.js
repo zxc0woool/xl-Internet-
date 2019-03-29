@@ -2,7 +2,7 @@
 const isDev = process.env.NODE_ENV === 'development';
 
 module.exports = {
-    SERVER_IP: '192.168.2.121', //147
+    SERVER_IP: '192.168.2.123', //147
     // SERVER_PORT: process.env.PORT || 8001,
     SERVER_PORT: 8080,
 

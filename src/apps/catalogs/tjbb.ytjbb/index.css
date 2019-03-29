@@ -1,3 +1,18 @@
 .tjbb-ytjbb{
   
 }
+.tjbb-ytjbb-data{
+    float: left;
+    width: 100%;
+}
+.tjbb-ytjbb-data-datatree{
+    float: left;
+    width: 19%;
+    height: 732px;
+    margin-right: 10px;
+}
+.tjbb-ytjbb-data-datatable{
+    width: 80%;
+    height: 732px;
+    float: left;
+}
