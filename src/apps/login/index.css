@@ -2,6 +2,7 @@
     /* text-align: center; */
     height: 100%;
     width: 100%;
+    background:url('../../images/login/index.jpg') round;
 }
 .Index .background{
     height: 100%;
@@ -30,31 +31,56 @@
 
 .Index-window{
     background-color: rgba(0, 0, 0, 0.164);
-    width: 400px;
-    height: 350px;
-    margin: 0 auto;
-    margin-top: 120px;
+    width: 540px;
+    height: 550px;
+    float: right;
+    margin-top: 10%;
+    margin-right: 10%;
     /* border: 1px solid rgba(0, 0, 0, 0.397); */
     position: relative;
+    background: url('../../images/login/userlogin.png') round;
     border-top-left-radius:10px;   
     border-top-right-radius:10px;
     border-bottom-left-radius:10px; 
     border-bottom-right-radius:10px; 
 }
-.input-Box{
-    padding-top: 20%;
+.Index .input-Box{
+    padding-top: 35%;
 }
-.input-box{
-    margin: 20px auto;
+.Index .input-box{
+    margin: 35px auto;
     width: 280px;
-    
+    padding-left: 40px;
+}
+.Index .ant-input-affix-wrapper:hover .ant-input:not(.ant-input-disabled){
+    border-color: #6a3be7;
+}
+.Index .button-box{
+    padding-top: 20px;
+    width: 198px;
+    float: left;
+}
+.Index .button-box{
+    position: relative;
+    padding-top: 2px;
+    bottom: -30px;
+    left: 173px;
+    width: 200px;
+    height: 45px;
+    float: left;
+}
+.Index .ant-btn-primary{
+    width: 100%;
+    height: 100%;
+    background-color: #6a3be7;
+    border-color: #5535ae;
+    border-radius: 25px;
 }
 .button-box{
     padding-top: 20px;
     width: 198px;
     float: left;
 }
-
 .company{
     color: #0c0c12;
     font-size: 15px;
@@ -66,10 +92,17 @@
     width: 16px;
     height: 16px;
     float: left;
-    margin-left: 240px;
+    padding-right: 22px;
+
+}
+.memory-body a{
+    color: #693be7;
 }
 .memory-body{
-    padding-top: 70px;
+    position: absolute;
+    right: 120px;
+    color: #bfbfbf;
+    bottom: 180px;
 }
 input[type='radio'], input[type='checkbox']{
     height: 16px;
@@ -87,4 +120,15 @@ input[type='radio'], input[type='checkbox']{
     height: 150px;
     width: 136px;
     background-color: #0000;
+}
+
+.Index .ant-input-affix-wrapper .ant-input{
+
+    background-color: #f0f8ff00;
+    border: 1px solid #d9d9d900;
+    color: #693be6;
+}
+.Index .ant-input-clear-icon{
+
+    color: #fafafa78;
 }

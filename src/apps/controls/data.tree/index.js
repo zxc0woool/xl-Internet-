@@ -58,7 +58,6 @@ class DataTree extends Component {
   }
 
   onSelect = (selectedKeys, info) => {
-
     if(this.props.ongetfindAllByDepartment){
       this.props.ongetfindAllByDepartment(info.node.props);
     }
@@ -82,6 +81,7 @@ class DataTree extends Component {
   }
 
   TreeNode = (datalist) => {
+    if(datalist) 
     return datalist.map((_d) => {
       let key = _d.name + '_' + _d.id;
       if(!datalistkey.data[key] && _d.children.length > 0 ){

@@ -4,14 +4,17 @@ import React, { Component } from 'react';
 import UserImage from '../../../images/src/userImage.gif'
 import IcoFingerprint from '../../../images/src/ico_fingerprint.png'
 import { Icon, Input, Select, Modal, Upload, Button, Checkbox, Row, Col, Tree, TreeSelect, DatePicker, message } from 'antd';
+import DataTreeCheckList from '../../controls/data.tree.check.list';
+import ElasticFrame from '../../controls/elastic.frame';
 import Util from '../../../uilt/http.utils';
 import moment from 'moment';
 import Fingerprint from '../fingerprint';
-
+import ZKIDROnline from '../../../file/ZKIDROnline.exe';
 import './index.css';
 
 const Option = Select.Option;
 const { TreeNode } = Tree;
+let titleTextUserIdperId = "";
 let titleTextUserId = "";
 class Information extends Component {
 
@@ -21,25 +24,33 @@ class Information extends Component {
       previewVisible: false,
       previewImage: UserImage,
       fileList: [],
+      equipment: [],
+      rightDatalist: [],
       titleText: "",
+      isSnap: false,
       data: {},
+      snapdata: {},
+      newlyPopup: {
+        title: "",
+        switch: true,
+      },
       dhxtabbarState: {
-        title: "mjsz"
+        // title: "mjsz"
       },
       departmentDatalist: [],
       dhxtabbar: [
-        {
-          title: '门禁设置',
-          value: 'mjsz'
-        },
-        {
-          title: '考勤设置',
-          value: 'kqsz'
-        },
-        {
-          title: '详细信息',
-          value: 'xxxx'
-        },
+        // {
+        //   title: '门禁设置',
+        //   value: 'mjsz'
+        // },
+        // {
+        //   title: '考勤设置',
+        //   value: 'kqsz'
+        // },
+        // {
+        //   title: '详细信息',
+        //   value: 'xxxx'
+        // },
       ],
 
       expandedKeys: [],
@@ -52,7 +63,6 @@ class Information extends Component {
 
   componentDidMount() {
     // this.getDepartment();
-
     this.setState({
       data: this.props.data,
       fileList: this.props.data.perPhoto ? [{
@@ -71,11 +81,16 @@ class Information extends Component {
 
   }
 
+  newlyPopup = (_d, title) => {
 
-
-
-
-
+    this.setState({
+      newlyPopup: {
+        title: title,
+        switch: true,
+      },
+      snapdata: _d
+    })
+  }
   warningHints() {
 
     let titleText = ''
@@ -91,6 +106,9 @@ class Information extends Component {
     if (!this.state.data.positionId) {
       titleText = '带 * 不得为空！'
     }
+    if (titleTextUserIdperId !== "") {
+      titleText = titleTextUserIdperId
+    }
     if (titleTextUserId !== "") {
       titleText = titleTextUserId
     }
@@ -98,6 +116,7 @@ class Information extends Component {
     this.props.onWillUnmount(false, titleText);
 
     this.setState({ titleText })
+    return titleText !== "" ? false : true
   }
 
   onTreeExpand = (expandedKeys) => {
@@ -155,9 +174,6 @@ class Information extends Component {
   }
 
 
-
-
-
   handleCancel = () => {
     this.setState({ previewVisible: false })
   }
@@ -176,7 +192,7 @@ class Information extends Component {
       data: {
         ...this.state.data,
         file: fileList[0],
-        perPhoto:fileList[0]
+        perPhoto: fileList[0]
       }
     })
   }
@@ -209,13 +225,19 @@ class Information extends Component {
   //获取身份证信息
   cancelCapture = () => {
 
-    // Util.$http.get('http://127.0.0.1:24010/ZKIDROnline/info', {
+    let op = false;
+    titleTextUserId = '正在读取证件号...';
+    this.warningHints()
+    let setTimeout = window.setTimeout(() => {
+      if (!op) {
+        titleTextUserId = () => {
+          return <div>读取证件号的驱动不存在<a href={ZKIDROnline}>下载驱动</a></div>
+        }
+        this.warningHints()
+      }
 
-    // }).then((result) => {
-
-    // }).catch(function (error) {
-
-    // })
+      window.clearInterval(setTimeout);
+    }, 8000);
 
     Util.$http.get('http://127.0.0.1:24010/ZKIDROnline/ScanReadIdCardInfo?OP-DEV=1&CMD-URL=4&REPEAT=1&common=1&random=' + this.getRandomNum(), {
     }, {
@@ -223,6 +245,7 @@ class Information extends Component {
         async: true,
         timeout: 10000
       }).then((result) => {
+        op = true;
         let data = null;
         let text = result.data.replace(/\\/g, "/");
         try {
@@ -235,25 +258,252 @@ class Information extends Component {
             ...this.state.data,
             perNumber: data.Certificate.IDNumber,
             perName: data.Certificate.Name,
-            gender: data.Certificate.Sex,
-            birthDate: data.Certificate.Birthday
-          },
-          fileList: [{
-            uid: '-1',
-            status: 'done',
-            url: "data:image/jpeg;base64," + data.Certificate.Base64Photo
-          }]
-        })
-        message.success("读取成功");
-      }).catch(function (error) {
-        message.error("未读取到证件号");
-      })
+            gender: data.Certificate.Sex === "男" ? '1' : '2',
+            birthDate: data.Certificate.Birthday.replace(/^(\d{4})(\d{2})(\d{2})$/, "$1-$2-$3")
 
+          },
+          // fileList: [{
+          //   uid: '-1',
+          //   status: 'done',
+          //   url: "data:image/jpeg;base64," + data.Certificate.Base64Photo
+          // }]
+        })
+
+        message.success("读取成功");
+        titleTextUserId = ''
+        this.warningHints()
+        window.clearInterval(setTimeout);
+      }).catch(function (error) {
+        op = true;
+        message.error("未读取到证件号");
+        titleTextUserId = ""
+        this.warningHints()
+        window.clearInterval(setTimeout);
+      })
+      
+  }
+  //拍照抓拍
+  setFaceTakeImg = () => {
+    let { equipment } = this.state
+    let equipmentIndex = equipment.length
+    for(let key in equipment){
+      if(JSON.stringify(equipment[key]) === '{}'){
+        equipment.splice(key, 1); 
+        equipmentIndex = equipment.length
+        break;
+      }
+    }
+    if (equipmentIndex !== 1) {
+      message.error("请选择一个设备后再照片注册");
+      return false;
+    }
+    let IP = 'http://' + equipment[0].attIp + ':' + equipment[0].attPort;
+    let _data = this.state.data
+    _data.birthDate = _data.birthDate ? (new Date(_data.birthDate)).Format("yyyy-MM-dd") : _data.birthDate;
+    _data.entryDate = _data.entryDate ? (new Date(_data.entryDate)).Format("yyyy-MM-dd") : _data.entryDate;
+
+
+    //检查设备是否可用
+    Util.$http.post(IP + '/getDeviceKey', {
+    }).then((params) => {
+
+      if (params.data.success) {
+        this.setState({
+          titleText: "抓拍中！请稍后...",
+          isSnap: true
+        })
+        this.props.onWillUnmount(this.state.data, '抓拍中！请稍后...');
+        let url = "/project_war_exploded/person/addPerson.do"
+
+        if(this.props.props.title === "编辑"){
+          url = "/project_war_exploded/person/updatePerson.do"
+        } 
+
+        Util._httpPost(url, {
+          ..._data
+        }).then((params) => {
+
+          //人员创建成功 
+          if (params.data.flag || this.props.toUserID) {
+            let person = {
+              name: _data.perName,
+              id: _data.perId,
+              idcardNum: _data.cardNumber,
+            }
+            Util.$http.post(IP + '/person/create', {
+              pass: equipment[0].attPass,
+              person: JSON.stringify(person)
+            }).then((params) => {
+              //人员注册成功
+
+              if (params.data.success || true) {
+                let _d = _data;
+                // let IP = 'http://' + equipment[0].attIp + ':' + equipment[0].attPort;
+                Util.$http.post(IP + '/face/takeImg', {
+                  pass: equipment[0].attPass,
+                  personId: _d.perId
+                }).then((params) => {
+                  // this.setDataText(JSON.stringify(params.data));
+
+                  if (params.data.success) {
+                    let heartbeat = setInterval(() => {
+                      //从设备获取照片
+                      Util.$http.post(IP + '/face/find', {
+                        pass: equipment[0].attPass,
+                        personId: _d.perId
+                      }).then((params) => {
+
+                        if (params.data.success) {
+
+                          clearInterval(heartbeat);
+
+                          //提交保存图片
+                          Util._httpPost('project_war_exploded/person/insertPersonPhoto.do', {
+                            perId: _d.perId,
+                            datalist: params.data.data
+                          }).then((params) => {
+
+                            if (params.data.success) {
+                              // this.onGetData(1, this.state.pagination.pageSize);
+                              this.setState({
+                                equipmentPhotoList: params.data.datalist
+                              })
+                              this.setState({
+
+                              })
+                              this.setState({
+                                isSnap: false,
+                                data: {
+                                  ...this.state.data,
+                                  perPhoto: params.data.datalist[params.data.datalist.length - 1].path
+                                },
+                                fileList: [{
+                                  uid: '-1',
+                                  status: 'done',
+                                  url: params.data.datalist[params.data.datalist.length - 1].path
+                                }]
+                              }, () => {
+                                this.warningHints()
+                                this.props.newlyPopup(this.state.data, '编辑');
+                              })
+                              this.props.onWillUnmount(this.state.data, '');
+                            } else {
+
+                            }
+
+                          }).catch(function (error) {
+                            message.error('系统错误');
+                          })
+
+
+
+                          // this.newlyPopup(_d, "设备人员照片管理")
+                        } else {
+                          this.setState({
+                            titleText: params.data.msg,
+                            isSnap: false
+                          })
+                        }
+
+                      }).catch(function (error) {
+                        message.error('系统错误');
+                      })
+
+                    }, 1000);
+                  } else {
+                    this.setState({
+                      titleText: params.data.msg,
+                      isSnap: false
+                    })
+                  }
+
+
+                }).catch(function (error) {
+                  message.error('系统错误');
+                })
+
+
+              } else {
+                //人员注册失败
+                this.setState({
+                  titleText: params.data.msg,
+                  isSnap: false
+                })
+
+              }
+
+            })
+
+
+
+
+
+          } else {
+            //人员创建失败
+            this.setState({
+              titleText: params.data.toSrting(),
+              isSnap: false
+            })
+          }
+
+
+        }).catch((error) => {
+
+        })
+      } else {
+        this.setState({
+          titleText: params.data.msg,
+          isSnap: false
+        })
+
+      }
+
+
+
+    })
+
+
+
+    return true;
+
+  }
+
+  //设备查询
+  findAll = () => {
+    Util._httpPost("/project_war_exploded/attendance/findAll.do", JSON.stringify({
+    })).then((params) => {
+      this.setState({
+        rightDatalist: params.data.rows
+      })
+    }).catch((error) => {
+
+    })
+  }
+  //勾选设备
+  addEquipment = (_data) => {
+    let equipment = [];
+    for (let key in _data) {
+      equipment.push(JSON.parse(_data[key].props.value));
+    }
+
+    this.setState({ equipment })
+
+  }
+  snap = () => {
+
+    if (this.warningHints()) {
+      this.findAll() //设备查询
+      this.newlyPopup({}, '抓拍')
+
+
+    } else {
+
+
+    }
 
 
 
   }
-
 
   render() {
     const { previewVisible, previewImage, fileList } = this.state;
@@ -291,10 +541,59 @@ class Information extends Component {
         ]
       }
     ];
-  
+
     return (
       <div className="information">
-   
+        {
+          this.state.newlyPopup.title === "抓拍" ?
+            <div className="photo_display">
+              <ElasticFrame
+                style={{ width: 500, height: 370 }}
+                title={this.state.newlyPopup.title}
+                titleText={this.state.titleText}
+                ok={() => {
+                  this.setState({
+                    newlyPopup: { switch: false }
+                  }, () => {
+                    let { equipment } = this.state
+                    //拍照注册
+                    if (this.setFaceTakeImg()) {
+                      this.setState({
+                        titleText: "正在尝试连接设备...[" + equipment[0].attName + ']',
+                        isSnap: false
+                      })
+                    } else {
+                      this.setState({
+                        newlyPopup: {
+                          title: '抓拍',
+                          switch: true
+                        }
+                      })
+                    }
+
+
+                    // this.faceDelete()
+                  })
+
+                }}
+                close={() => {
+                  this.setState({
+                    newlyPopup: { switch: false }
+                  })
+                }}
+                renderDom={(props) => {
+                  return (
+                    <div className="photo_body">
+                      <div className="rygl-ry-data-datatree-equipment">
+                        <DataTreeCheckList addEquipment={this.addEquipment} {...this.state} />
+                      </div>
+                    </div>
+                  )
+                }}
+              />
+
+            </div> : ''
+        }
         <table style={{ width: '100%' }}>
           <tbody>
             <tr>
@@ -315,9 +614,9 @@ class Information extends Component {
                               perId: this.state.data.perId
                             })).then((params) => {
                               if (params.data.flag) {
-                                titleTextUserId = "";
+                                titleTextUserIdperId = "";
                               } else {
-                                titleTextUserId = params.data.message
+                                titleTextUserIdperId = params.data.message
                               }
                               this.warningHints()
                             })
@@ -503,7 +802,12 @@ class Information extends Component {
 
                       </th>
                       <td>
-                        <span className="required"> {this.state.titleText} </span>
+                        <span className="required">
+                          {
+                            (typeof this.state.titleText === "string") ?
+                              this.state.titleText : this.state.titleText()
+                          }
+                        </span>
 
                       </td>
                     </tr>
@@ -546,7 +850,8 @@ class Information extends Component {
                     <div style={{ position: 'relative' }}>
                       <span className="color_orange">(最佳尺寸为120×140)</span>
                       <br />
-                      <Button>抓拍</Button>
+                      {/* isSnap */}
+                      <Button disabled={this.state.isSnap} onClick={this.snap}>抓拍{this.state.isSnap ? <Icon type="loading" /> : ''}</Button>
                       {/* <input type="file" id="file" onChange={this.changepic} accept="image/jpg,image/jpeg,image/png,image/PNG" /> */}
                     </div>
                   </div>

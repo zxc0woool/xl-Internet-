@@ -35,7 +35,7 @@ const shouldInlineRuntimeChunk = process.env.INLINE_RUNTIME_CHUNK !== 'false';
 const useTypeScript = fs.existsSync(paths.appTsConfig);
 
 // style files regexes
-const cssRegex = /\.css$/;
+const cssRegex = /\.(css|less)$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
@@ -79,6 +79,9 @@ module.exports = function(webpackEnv) {
       {
         loader: require.resolve('css-loader'),
         options: cssOptions,
+      },
+      {
+        loader: require.resolve('less-loader')
       },
       {
         // Options for PostCSS as we reference these options twice
@@ -313,6 +316,24 @@ module.exports = function(webpackEnv) {
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.
           oneOf: [
+            {
+              test: /\.less$/,
+              include: /node_modules\/antd/,
+              use: [
+                'style-loader',
+                { loader: 'css-loader', options: {modules: false} },
+                'less-loader'
+              ]
+            },
+            {
+              test: /\.less$/,
+              exclude: /node_modules\/antd/,
+              use: [
+                'style-loader',
+                { loader: 'css-loader', options: {modules: true} },
+                'less-loader'
+              ]
+            },
             // "url" loader works like "file" loader except that it embeds assets
             // smaller than specified limit in bytes as data URLs to avoid requests.
             // A missing `test` is equivalent to a match.

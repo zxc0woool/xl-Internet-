@@ -2,14 +2,14 @@
 
 }
 .equipment_personnel_management .ant-table-fixed-header > .ant-table-content > .ant-table-scroll > .ant-table-body{
-    max-height: 300px !important;
+    max-height: 228px !important;
 }
 .equipment_personnel_management .ant-table-scroll{
-    height: 334px;
+    height: 264px;
 }
 
 .equipment_personnel_management .dhx_cell_layout{
-    height: 400px;
+    height: 330px;
 }
 
 .equipment_personnel_management .rygl-ry-data{
@@ -17,16 +17,17 @@
 }
 
 .equipment_personnel_management .rygl-ry-data-datatree{
-    height: 500px;
+    height: 428px;
     width: 200px;
 }
 
 .equipment_personnel_management .rygl-ry-data-datatable{
     width: 810px;
-    height: 500px;
+    height: 428px;
 }
 .equipment_personnel_management .rygl-ry-data-datatree-equipment{
     width: 204px;
+    height: 428px;
     float: right;
 }
 .equipment_personnel_management .photo_display{
@@ -62,10 +63,11 @@
 }
 
 .rygl-ry-data-datatree-information fieldset{
+    width: 100%;
     float: left;
 }
 .rygl-ry-data-datatree-information .sub_selectedAccLevel{
- 
+    overflow: auto;
     height: 120px;
 }
 .rygl-ry-data-datatree-information textarea{

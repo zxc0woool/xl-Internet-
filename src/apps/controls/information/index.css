@@ -198,3 +198,7 @@
 .information_biotemplate{
     cursor: pointer;
 }
+
+.information .photo_body .rygl-ry-data-datatree-equipment .dhx_cell_layout {
+    height: 235px;
+}

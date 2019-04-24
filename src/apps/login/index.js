@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { Input, Button, Checkbox, Icon } from 'antd';
+import { Input, Button, Checkbox, Icon, message } from 'antd';
 import fingerprint from '../../images/login/fingerprint.png';
 import logo from '../../images/login/logo.png';
 import IndexLogo from '../../images/login/index.jpg';
+import UserLogin from '../../images/login/userlogin.png';
 import Util from '../../uilt/http.utils';
 import cookie from '../../uilt/cookie';
-import Fingerprint from '../controls/fingerprint';
+// import Fingerprint from '../controls/fingerprint';
 import Zkbioonline from '../../file/zkbioonline.exe';
 import './index.css';
-
 class Login extends Component {
 
     constructor(props) {
@@ -28,8 +28,7 @@ class Login extends Component {
 
     componentDidMount() {
         //获取用户信息
-        let obj = cookie.Get('user');
-
+        let obj = JSON.parse(cookie.getCookie('user'));
         if (obj && obj.user) {
             let user = obj.user;
             let UserPassword = "";
@@ -43,7 +42,6 @@ class Login extends Component {
             });
 
         }
-
 
 
     }
@@ -79,26 +77,35 @@ class Login extends Component {
                     if (this.state.memory) {
                         password = params.data.password
                     }
-                    cookie.Set('user', {
+                    cookie.setCookie('user', JSON.stringify({
                         user: {
                             name: params.data.username,
                             UserName: params.data.username,
                             UserPassword: password,
                             sessionId: params.data.sessionId,
+                            token:params.data.token,
                             memory: this.state.memory
                         }
-                    })
-                    this.props.history.push('/index');
+                    }))
+                    Util.setAuthToken(params.data.token);
+                    this.props.history.push('/pers');
                 } else {
                     //登入失败
+                    message.error("账号不存在或密码错误！")
                 }
 
             }).catch(function (error) {
 
             })
 
+        }else{
+            message.error("账号或密码不得为空！")
         }
 
+    }
+    keyLogin = (event) => {
+        if (event.keyCode == 13)  //回车键登入
+          this.onLogin()
     }
     /**
   * 获取webserver的信息
@@ -171,8 +178,8 @@ class Login extends Component {
         })
         setTimeout(() => {
             this.printing("指纹获取成功正在登录中...");
-        },0)
-        
+        }, 0)
+
     }
 
     printing = (explain) => {
@@ -201,55 +208,55 @@ class Login extends Component {
 
     render() {
         return (
-            <div className="Index">
+            <div className="Index" onKeyDown={this.keyLogin}>
                 <div className="background">
                     <img src={IndexLogo} className="Index-logo" alt="logo" />
                 </div>
 
                 <div className="Index-body">
-                    <img src={logo} className="logo" alt="logo" />
+                    {/* <img src={logo} className="logo" alt="logo" /> */}
 
                     <div className="Index-window">
                         <div className="input-Box" >
-                            <div style={this.state.isfingerprint ? { display: 'none' } : {}}>
+                            <div>
                                 <div className="input-box">
-                                    <Input placeholder="用户名" value={this.state.UserName} allowClear onChange={this.onInputChangeName.bind(this)} />
+                                    <Input placeholder="请输入用户名" value={this.state.UserName} allowClear onChange={this.onInputChangeName.bind(this)} />
                                 </div>
                                 <div className="input-box">
-                                    <Input type="password" placeholder="密码" value={this.state.UserPassword} allowClear onChange={this.onInputChangePassword.bind(this)} />
+                                    <Input type="password" placeholder="请输入登录密码" value={this.state.UserPassword} allowClear onChange={this.onInputChangePassword.bind(this)} />
                                 </div>
                             </div>
 
-                            <img style={!this.state.isfingerprint ? { display: 'none' } : {}} src={fingerprint} className="fingerprint" alt="fingerprint" />
+                            {/* <img style={!this.state.isfingerprint ? { display: 'none' } : {}} src={fingerprint} className="fingerprint" alt="fingerprint" />
                             <div style={{ color: '#fff' }}>
                                 {
 
                                     this.state.isfingerprint ? this.state.ToDrive ? this.state.explain ? this.state.explain : <div><Icon type="loading" />正在链接指纹采集仪</div> : <div>驱动不存在<a href={Zkbioonline}>下载驱动</a></div> : ''
 
                                 }
-                            </div>
+                            </div> */}
 
                         </div>
 
                         <div className="button-box" style={this.state.isfingerprint ? { display: 'none' } : {}}>
-                            <Button type="primary" icon="user" onClick={this.onLogin.bind(this)}>登录</Button>
+                            <Button type="primary" onClick={this.onLogin.bind(this)}>登录</Button>
                         </div>
-                        <div className="button-box">
-                            <Button type="dashed" onClick={this.onFingerprintLogin.bind(this)}>{this.state.fingerprintName}</Button>
-                        </div>
+                        {/* <div className="button-box">
+                            <Button type="dashed" disabled onClick={this.onFingerprintLogin.bind(this)}>{this.state.fingerprintName}</Button>
+                        </div> */}
                         {/* <div className="company">浙江控控科技股份有限公司</div> */}
 
                         <div className="memory-body" style={this.state.isfingerprint ? { display: 'none' } : {}}>
                             <div className="memory">
                                 <Checkbox checked={this.state.memory} onChange={this.onCheckboxChange.bind(this)} />
                             </div>
-                            自动登录 | <a>忘记密码？</a>
+                            记住密码 | <a>忘记密码？</a>
 
                         </div>
                     </div>
 
                     {
-                        this.state.isfingerprint ? <Fingerprint printing={this.printing} isfingerprint={this.state.isfingerprint} setPerFinger={this.setPerFinger} ToFingerprint={() => { }} /> : () => { }
+                        // this.state.isfingerprint ? <Fingerprint printing={this.printing} isfingerprint={this.state.isfingerprint} setPerFinger={this.setPerFinger} ToFingerprint={() => { }} /> : () => { }
                     }
 
 

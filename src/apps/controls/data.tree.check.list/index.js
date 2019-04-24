@@ -6,16 +6,16 @@ import './index.css';
 
 // const DirectoryTree = Tree.DirectoryTree;
 const { TreeNode } = Tree;
-let datalistkey ={list:[],data:{}};
+let datalistkey = { list: [], data: {} };
 class DataTreeCheckList extends Component {
 
- 
+
   constructor(props) {
     super(props);
     this.state = {
-      defaultExpandAll:true,
-      rightDatalist:[
-       
+      defaultExpandAll: true,
+      rightDatalist: [
+
       ]
     }
 
@@ -26,16 +26,16 @@ class DataTreeCheckList extends Component {
     // this.onClickDefaultExpandAllYes()
   }
 
-  componentDidUpdate(){
- 
+  componentDidUpdate() {
+
   }
 
 
   onCheck = (selectedKeys, info) => {
-    if(this.props.addEquipment){
+    if (this.props.addEquipment) {
       this.props.addEquipment(info.checkedNodes);
     }
-   
+
     // console.log('selected', selectedKeys, info);
   }
 
@@ -44,17 +44,17 @@ class DataTreeCheckList extends Component {
   TreeNode = (datalist) => {
     return datalist.map((_d) => {
       let key = _d.id;
-      if(!datalistkey.data[key]){
+      if (!datalistkey.data[key]) {
         datalistkey.data[key] = key
         datalistkey.list.push(key)
       }
       return (
-        <TreeNode title={_d.attName} value={JSON.stringify(_d)} id={_d.id} key={key} >
-         
+        <TreeNode title={_d.attName + '(' + _d.attIp + ')'} value={JSON.stringify(_d)} id={_d.id} key={key} >
+
         </TreeNode>
       )
     })
-    
+
   }
 
 
@@ -71,17 +71,21 @@ class DataTreeCheckList extends Component {
 
           <Tree
             checkable
+            defaultExpandAll
             onCheck={this.onCheck}
           >
+            <TreeNode title={'全选'} value={"{}"} id={'全选00'} >
               {
                 this.TreeNode(this.props.rightDatalist)
               }
+            </TreeNode>
+
 
           </Tree>
-       
+
 
         </div>
-    
+
 
       </div>
     );

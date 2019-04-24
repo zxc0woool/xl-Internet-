@@ -1,16 +1,18 @@
 
 
 import React, { Component } from 'react';
-import { Layout, Button, Input, Icon } from 'antd'
+import { Layout, Button, Input, Icon, message, Checkbox } from 'antd'
 import DataTree from '../../controls/data.tree';
 import DataTreeCheckList from '../../controls/data.tree.check.list';
 import DataTable from '../../controls/data.table';
 import ElasticFrame from '../../controls/elastic.frame';
 import Util from '../../../uilt/http.utils';
+import TextArea from '../text.area';
 import './index.css';
 
 const { Header } = Layout;
-const { TextArea } = Input;
+// const { TextArea } = Input;
+let totalProgress = 0;
 class EquipmentPersonnelManagement extends Component {
 
   constructor(props) {
@@ -21,6 +23,10 @@ class EquipmentPersonnelManagement extends Component {
       userName: "",
       titleText: "",
       dataText: "",
+      totalProgress: 0,
+      time: 0,
+      isImplement: false,
+      AllPersonnel: false,
       equipment: [],
       equipmentPhotoList: [],
       equipmentPhotoFaceIdList: [],
@@ -40,24 +46,24 @@ class EquipmentPersonnelManagement extends Component {
         {
           title: '账号',
           dataIndex: 'account',
-          width: 100,
+          width: 50,
         }, {
           title: '编号',
           dataIndex: 'perId',
-          width: 100,
+          width: 50,
         }, {
           title: '姓名',
           dataIndex: 'perName',
-          width: 100,
+          width: 50,
         }, {
           title: '卡号',
           dataIndex: 'cardNumber',
-          width: 100,
+          width: 150,
         }, {
           title: '照片操作',
           dataIndex: 'dictName',
           key: 'operation',
-          width: 100,
+          width: 110,
           render: (e, _d) => {
             return <div className="rygl-bm-operation">
               <Button style={{ height: 24 }} onClick={() => this.setFaceTakeImg(_d)} disabled={_d.perPhoto !== undefined}>注册</Button>
@@ -138,9 +144,16 @@ class EquipmentPersonnelManagement extends Component {
 
   //拍照注册
   setFaceTakeImg = (_d) => {
+    let _this = this;
     let { equipment } = this.state
     let equipmentIndex = equipment.length
-
+    for (let key in equipment) {
+      if (JSON.stringify(equipment[key]) === '{}') {
+        equipment.splice(key, 1);
+        equipmentIndex = equipment.length
+        break;
+      }
+    }
     if (equipmentIndex !== 1) return this.setDataText("请选择一个设备后再照片注册");
     let IP = 'http://' + equipment[0].attIp + ':' + equipment[0].attPort;
     Util.$http.post(IP + '/face/takeImg', {
@@ -149,7 +162,7 @@ class EquipmentPersonnelManagement extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data));
 
-      if (params.success) {
+      if (params.data.success) {
         let heartbeat = setInterval(() => {
           //从设备获取照片
           Util.$http.post(IP + '/face/find', {
@@ -177,7 +190,7 @@ class EquipmentPersonnelManagement extends Component {
                 }
 
               }).catch(function (error) {
-                this.setDataText('系统错误');
+                _this.setDataText('系统错误');
               })
 
 
@@ -188,7 +201,7 @@ class EquipmentPersonnelManagement extends Component {
             }
 
           }).catch(function (error) {
-            this.setDataText('系统错误');
+            _this.setDataText('系统错误');
           })
 
         }, 1000);
@@ -196,7 +209,7 @@ class EquipmentPersonnelManagement extends Component {
 
 
     }).catch(function (error) {
-      this.setDataText('系统错误');
+      _this.setDataText('系统错误');
     })
 
 
@@ -206,9 +219,16 @@ class EquipmentPersonnelManagement extends Component {
   }
   //从设备获取照片
   faceFind = (_d) => {
+    let _this = this;
     let { equipment } = this.state
     let equipmentIndex = equipment.length
-
+    for (let key in equipment) {
+      if (JSON.stringify(equipment[key]) === '{}') {
+        equipment.splice(key, 1);
+        equipmentIndex = equipment.length
+        break;
+      }
+    }
     if (equipmentIndex !== 1) return this.setDataText("请选择一个设备后再照片查看");
 
     let IP = 'http://' + equipment[0].attIp + ':' + equipment[0].attPort;
@@ -216,6 +236,7 @@ class EquipmentPersonnelManagement extends Component {
       pass: equipment[0].attPass,
       personId: _d.perId
     }).then((params) => {
+
       this.setDataText(JSON.stringify(params.data));
       if (params.data.success) {
 
@@ -233,7 +254,7 @@ class EquipmentPersonnelManagement extends Component {
           }
 
         }).catch(function (error) {
-          this.setDataText('系统错误');
+          _this.setDataText('系统错误');
         })
 
         this.newlyPopup(_d, "设备人员照片管理")
@@ -242,7 +263,7 @@ class EquipmentPersonnelManagement extends Component {
       }
 
     }).catch(function (error) {
-      this.setDataText('系统错误');
+      _this.setDataText('系统错误');
     })
 
   }
@@ -337,6 +358,74 @@ class EquipmentPersonnelManagement extends Component {
 
     })
   }
+
+  //从设备中拉取人员到系统中
+  pullData = () => {
+    let { equipment } = this.state
+    let equipmentIndex = equipment.length
+    for (let key in equipment) {
+      if (JSON.stringify(equipment[key]) === '{}') {
+        equipment.splice(key, 1);
+        break;
+      }
+    }
+    if (!equipmentIndex) return this.setDataText('请选择下载信息的设备');
+    this.setDataText('从设备中拉取人员到系统中请稍后...');
+    Util._httpPost("/project_war_exploded/person/pullData.do", JSON.stringify({
+      datalist: equipment
+    })).then((params) => {
+
+      // if (params.data.msg) {
+      //   params.data.msg.map((_d, index) => {
+      //     this.setDataText("下载人员 >>> 姓名：'" + _d.name + "'  id：'" + _d.PerId + "' 【设备信息】：设备名 '" + _d.attName + "' " + JSON.stringify(_d));
+      //   })
+      //   this.onGetData(1, this.state.pagination.pageSize);
+      // }
+
+      if (params.data.flag) {
+        let d = window.setInterval(() => {
+
+          Util._httpPost("/project_war_exploded/person/getMsg.do", JSON.stringify({
+          })).then((params) => {
+
+            if (params.data.flag) {
+              let text = "";
+              params.data.msg.map((_d, index) => {
+                text += '系统信息：' + "下载人员 >>>" + JSON.stringify(_d) + '\n';
+              })
+
+              this.setState({
+                dataText: text,
+                totalProgress: params.data.Percentage
+              })
+              if (params.data.finish) {
+                window.clearInterval(d);
+              }
+              this.onGetData(1, this.state.pagination.pageSize);
+            } else {
+              window.clearInterval(d);
+            }
+
+          }).catch((error) => {
+
+          })
+
+        }, 1000)
+        message.success(params.data.message)
+      } else {
+        message.error(params.data.message)
+        this.setDataText('用户：' + params.data.message);
+      }
+
+    }).catch((error) => {
+
+    })
+
+
+
+
+  }
+
   //通过部门查询人员
   getfindAllByDepartment = (_d) => {
     Util._httpPost("/project_war_exploded/person/findAllByEquipment.do", JSON.stringify({
@@ -359,23 +448,61 @@ class EquipmentPersonnelManagement extends Component {
 
     })
   }
-  setDataText = (dataText) => {
-    this.setState({ dataText: this.state.dataText + '系统信息：' + dataText + '\n' })
-  }
+  setDataText = (dataText, ser) => {
+    if (!ser) {
+      this.setState({ dataText: this.state.dataText + '系统信息：' + dataText + '\n' })
+    } else {
+      this.setState({ dataText: dataText })
+    }
 
+  }
+  onChange = (e) => {
+    this.setState({
+      AllPersonnel: e.target.checked
+    })
+    // console.log(`checked = ${e.target.checked}`);
+  }
   //上传人员信息
   setPersonCreate = () => {
     let _this = this;
     let { equipment, selectedRows } = this.state
+    if (this.state.AllPersonnel) {
+      selectedRows = this.state.datalist
+    }
+    for (let key in equipment) {
+      if (JSON.stringify(equipment[key]) === '{}') {
+        equipment.splice(key, 1);
+        break;
+      }
+    }
 
     let selectedRowsIndex = selectedRows.length
     let equipmentIndex = equipment.length
+    // let ks = new Date().getTime();
+    // let js = 0;
+    totalProgress = 0;
+    let add = 100 / ((selectedRowsIndex * equipmentIndex) * 2);
 
-    let totalProgress = 0;
-    let add = 100 / ((selectedRowsIndex * equipmentIndex) * 2)
 
     if (!selectedRowsIndex) this.setDataText('请选择导入人员');
     if (!equipmentIndex) this.setDataText('请选择导入设备');
+    this.setDataText('正在导入数据，请稍后...');
+    this.setState({
+      totalProgress: (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)),
+      isImplement: true
+    })
+    let datas = {};
+    let text = "";
+    let dI = window.setInterval(() => {
+      if ((parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)) === 100) {
+        window.clearInterval(dI);
+      }
+      this.setState({
+        totalProgress: (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress))
+      })
+      this.setDataText(text, true)
+    }, 500)
+
 
     for (let key in equipment) { // 设备
       for (let i in selectedRows) { // 人员
@@ -390,62 +517,162 @@ class EquipmentPersonnelManagement extends Component {
         Util.$http.post(IP + '/person/create', {
           pass: equipment[key].attPass,
           person: JSON.stringify(person)
-        }).then((params) => {
+        }, { timeout: 10000 }).then((params) => {
           totalProgress += add
-          this.setDataText("导入人员 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + "   进度[" + (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)) + "%]");
-          let perPhoto = selectedRows[i].perPhoto
-          let bast64 = "";
-          if (perPhoto.indexOf("data:image/jpg;base64,") !== -1) {
-            bast64 = perPhoto.split("data:image/jpg;base64,");
-          } else if (perPhoto.indexOf("data:image/png;base64,") !== -1) {
-            bast64 = perPhoto.split("data:image/png;base64,");
-          } else if (perPhoto.indexOf("data:image/jpeg;base64,") !== -1) {
-            bast64 = perPhoto.split("data:image/jpeg;base64,");
-          }
+          if (params.data !== "" && !params.data.success) {
 
-          if (bast64 !== "") {
-            //照片注册（base64）
-            Util.$http.post(IP + '/face/create', {
+            Util.$http.post(IP + '/person/update', {
               pass: equipment[key].attPass,
-              personId: selectedRows[i].perId,
-              faceId: selectedRows[i].perId,
-              imgBase64: bast64[1],
-              isEasyWay: true,
+              person: JSON.stringify(person)
             }).then((params) => {
-              totalProgress += add
-              this.setDataText("导入照片 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + "   进度[" + (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)) + "%]");
-
+              text += '系统信息：' + "更新人员 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + '\n';
             }).catch(function (error) {
-              _this.setDataText('照片不存在');
+              _this.setDataText('系统错误');
             })
 
           } else {
-            totalProgress += add
+            text += '系统信息：' + "导入人员 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + '\n';
 
-            this.setDataText("导入照片 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + "  照片不存在或格式不正确! 图片格式支持( png、jpg、jpeg )  " + "   进度[" + (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)) + "%]");
           }
 
+
+          let perPhoto = selectedRows[i].perPhoto;
+
+          //http://设备 IP:8090/face/featureReg 
+          if (selectedRows[i].feature) {
+            Util.$http.post(IP + '/face/featureReg', {
+              pass: equipment[key].attPass,
+              personId: selectedRows[i].perId,
+              faceId: selectedRows[i].faceId ? selectedRows[i].faceId : "",
+              feature: selectedRows[i].feature,
+              featureKey: selectedRows[i].featureKey,
+            }).then((params) => {
+              totalProgress += add
+              text += '系统信息：' + "导入特征码 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + '\n';
+
+              // time: parseInt((js - ks) / 1000) + '秒'
+
+            }).catch(function (error) {
+              _this.setDataText(error);
+            })
+          } else if (perPhoto) {
+            let bast64 = "";
+            if (perPhoto.indexOf("data:image/jpg;base64,") !== -1) {
+              bast64 = perPhoto.split("data:image/jpg;base64,");
+            } else if (perPhoto.indexOf("data:image/png;base64,") !== -1) {
+              bast64 = perPhoto.split("data:image/png;base64,");
+            } else if (perPhoto.indexOf("data:image/jpeg;base64,") !== -1) {
+              bast64 = perPhoto.split("data:image/jpeg;base64,");
+            }
+
+            if (bast64 !== "") {
+              //照片注册（base64）
+
+              datas[person.id + equipment[key].attIp] = {
+                attIp: equipment[key].attIp,
+                attPort: equipment[key].attPort,
+
+                pass: equipment[key].attPass,
+                personId: selectedRows[i].perId,
+                faceId: selectedRows[i].perId,
+                imgBase64: bast64[1],
+                isEasyWay: true,
+
+                name: person.name,
+                id: person.id,
+                attName: equipment[key].attName,
+                data: JSON.stringify(params.data)
+              }
+
+              Util.$http.post(IP + '/face/create', {
+                pass: equipment[key].attPass,
+                personId: selectedRows[i].perId,
+                faceId: selectedRows[i].perId,
+                imgBase64: bast64[1],
+                isEasyWay: true,
+              }).then((params) => {
+                totalProgress += add
+
+                text += '系统信息：' + "导入照片 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + '\n';
+
+
+                // time: parseInt((js - ks) / 1000) + '秒'
+
+              }).catch(function (error) {
+                _this.setDataText(error);
+              })
+
+            } else {
+              totalProgress += add
+
+              text += '系统信息：' + "导入照片 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + "  照片不存在或格式不正确! 图片格式支持( png、jpg、jpeg )  " + "\n";
+
+            }
+          } else {
+            totalProgress += add
+            text += '系统信息：' + "导入照片 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + "  照片不存在或格式不正确! 图片格式支持( png、jpg、jpeg )  " + "\n";
+
+          }
+
+
         }).catch(function (error) {
-          _this.setDataText('人员照片不存在');
+          totalProgress += add
+          // js = new Date().getTime();
+          text += '系统信息：' + "导入人员 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】： 设备名： '" + equipment[key].attName + "' " + "  当前设备网络连接超时！ 当前人员照片导入已取消！ " + "\n";
+
+          // time: parseInt((js - ks) / 1000) + '秒'
+
         })
 
       }
 
     }
 
+    let d = window.setInterval(() => {
+      if ((parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)) === 100) {
+        window.clearInterval(d);
+        this.setState({
+          totalProgress: (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)),
+          isImplement: false
+          // time: parseInt((js - ks) / 1000) + '秒'
+        })
+        this.setDataText("进度已完成[" + (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)) + "%]");
+      }
+
+
+    }, 1000)
+
   }
   //删除人员信息
   personDelete = () => {
     let { equipment, selectedRows } = this.state
 
+    if (this.state.AllPersonnel) {
+      selectedRows = this.state.datalist
+    }
+    for (let key in equipment) {
+      if (JSON.stringify(equipment[key]) === '{}') {
+        equipment.splice(key, 1);
+        break;
+      }
+    }
+
     let selectedRowsIndex = selectedRows.length
     let equipmentIndex = equipment.length
 
+    totalProgress = 0;
+    let add = 100 / (equipmentIndex)
     if (!selectedRowsIndex) this.setDataText('请选择删除人员');
     if (!equipmentIndex) this.setDataText('请选择删除设备');
+    this.setDataText('人员删除中...');
+    this.setState({
+      totalProgress: (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)),
+      isImplement: true
+    })
 
     let id = "";
     for (let key in equipment) { // 设备
+      id = "";
       for (let subscript in selectedRows) { // 人员
         if (id === "") {
           id += selectedRows[subscript].perId
@@ -453,20 +680,30 @@ class EquipmentPersonnelManagement extends Component {
           id += "," + selectedRows[subscript].perId
         }
 
-        let IP = 'http://' + equipment[key].attIp + ':' + equipment[key].attPort;
-        //人员注册/person/delete 
-        Util.$http.post(IP + '/person/delete', {
-          pass: equipment[key].attPass,
-          id: id
-        }).then((params) => {
-
-          this.setDataText("删除人员 >>>【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data));
-
-        }).catch(function (error) {
-          this.setDataText('系统错误');
-        })
       }
 
+      let IP = 'http://' + equipment[key].attIp + ':' + equipment[key].attPort;
+      //人员注册/person/delete 
+      Util.$http.post(IP + '/person/delete', {
+        pass: equipment[key].attPass,
+        id: id
+      }).then((params) => {
+        totalProgress += add
+     
+        this.setDataText("删除人员 >>>【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data))
+        if((parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)) === 100){
+          this.setState({
+            totalProgress: (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)),
+            isImplement:false
+          })
+        }else{
+          this.setState({
+            totalProgress: (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress))
+          })
+        }
+      }).catch(function (error) {
+        this.setDataText('系统错误');
+      })
     }
 
   }
@@ -556,7 +793,7 @@ class EquipmentPersonnelManagement extends Component {
     return (
       <div className="equipment_personnel_management">
         {
-          this.state.newlyPopup.title === "设备人员照片管理" || this.state.newlyPopup.title === "设备人员照片管理" ?
+          this.state.newlyPopup.title === "设备人员照片管理" ?
             <div className="photo_display">
               <ElasticFrame
                 style={{ width: 800, height: 560 }}
@@ -604,7 +841,7 @@ class EquipmentPersonnelManagement extends Component {
               模糊查询：<Input value={this.state.testName} onChange={(e) => this.search(e.target.value)} />
             </div>
             <div>
-              {/* <Button onClick={() => this.onGetData(1, this.state.pagination.pageSize)} icon="search">搜索</Button> */}
+              <Button onClick={() => this.pullData()} icon="download">下载设备的人员信息</Button>
             </div>
           </div>
         </Header>
@@ -624,16 +861,36 @@ class EquipmentPersonnelManagement extends Component {
           <div className="rygl-ry-data-datatree-information">
 
             <fieldset>
-              <legend style={{ border: 0 }}>信息</legend>
+              <legend style={{ border: 0 }}>
+                <div className="selected_accLevel_fieldset">
+                  <Checkbox onChange={this.onChange}>是否所有人员</Checkbox>
+                  <span disabled={this.state.isImplement}><Button disabled={this.state.isImplement} onClick={this.setPersonCreate}>上传人员信息</Button></span>
+                  <span disabled={this.state.isImplement}><Button disabled={this.state.isImplement} onClick={this.personDelete}>删除设备人员信息</Button></span>
+                  <Button onClick={() => { this.setState({ dataText: [] }) }}>清空信息</Button>
+                  <div style={{ float: 'right', lineHeight: '30px', width: 400, height: 30, borderRadius: 30, background: 'rgb(223, 223, 223)' }}>
+
+                    <div style={{
+                      width: this.state.totalProgress * 4,
+                      height: 30,
+                      backgroundColor: '#43a7ff',
+                      position: 'relative',
+                      borderRadius: 30
+                    }}>
+                      <div style={{ paddingLeft: 12 }}>{this.state.totalProgress + "%"}</div>
+
+                    </div>
+                  </div>
+
+                </div>
+
+              </legend>
+
               <div className="sub_selectedAccLevel">
-                <TextArea value={this.state.dataText} rows={5}> </TextArea>
+                <TextArea id={"textAreaKet"} value={this.state.dataText} rows={5}> </TextArea>
               </div>
 
             </fieldset>
-            <div className="selected_accLevel_fieldset">
-              <Button onClick={this.setPersonCreate}>上传人员信息</Button>
-              <Button onClick={this.personDelete}>删除设备人员信息</Button>
-            </div>
+
           </div>
         </div>
       </div>

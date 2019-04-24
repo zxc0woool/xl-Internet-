@@ -10,6 +10,8 @@ import './index.css';
 const { Header } = Layout;
 const TreeNode = TreeSelect.TreeNode;
 let titleTextUserId = "";
+let titleTextUserDepartId = "";
+let titleTextUserIdDepartId = "";
 class RyglBm extends Component {
   constructor(props) {
     super(props);
@@ -109,6 +111,13 @@ class RyglBm extends Component {
     if (!this.state.data.departName) {
       titleText = '带 * 不得为空！'
     }
+    if (titleTextUserIdDepartId !== "") {
+      titleText = titleTextUserIdDepartId
+    }
+
+    if (titleTextUserDepartId !== "") {
+      titleText = titleTextUserDepartId
+    }
 
     if (titleTextUserId !== "") {
       titleText = titleTextUserId
@@ -136,9 +145,9 @@ class RyglBm extends Component {
     })
 
   }
-  getDepartments = () => {
+  getDepartments = (text) => {
     this.getDepartment() //部门内容
-    this.findDepartmentAll(1, this.state.pagination.pageSize) //部门查询
+    this.findDepartmentAll(1, this.state.pagination.pageSize,text) //部门查询
   }
 
   //部门内容
@@ -155,7 +164,8 @@ class RyglBm extends Component {
   }
 
   //部门查询
-  findDepartmentAll = (current, pageSize) => {
+  findDepartmentAll = (current, pageSize,text) => {
+
     Util._httpPost("/project_war_exploded/department/findDepartmentAll.do", JSON.stringify({
       page: current,
       size: pageSize,
@@ -173,6 +183,9 @@ class RyglBm extends Component {
           pageSize: pageSize, //显示几条一页
         }
       })
+      if(text){
+        message.success(text,0.5);
+      }
     }).catch((error) => {
 
     })
@@ -236,12 +249,9 @@ class RyglBm extends Component {
 
   //更新数据
   toUpdate = () => {
-    setTimeout(() => {
-      this.setState({
-        newlyPopup: { switch: false }
-      })
-    }, 0)
-
+    this.setState({
+      newlyPopup: { switch: false }
+    })
     this.getDepartments("刷新成功");
   }
 
@@ -339,9 +349,9 @@ class RyglBm extends Component {
                                   departId: this.state.data.departId
                                 })).then((params) => {
                                   if (params.data.flag) {
-                                    titleTextUserId = "";
+                                    titleTextUserDepartId = "";
                                   } else {
-                                    titleTextUserId = params.data.message
+                                    titleTextUserDepartId = params.data.message
                                   }
                                   this.warningHints()
                                 })
@@ -353,6 +363,7 @@ class RyglBm extends Component {
 
                           <div className="rygl_bm_tableStyle_div"><label>部门名称 <span className="required">*</span></label>
                             <Input type="text" value={this.state.data.departName} onChange={(e) => {
+
                               this.setState({
                                 data: { ...this.state.data, departName: e.target.value }
                               }, () => {
@@ -388,12 +399,60 @@ class RyglBm extends Component {
                               placeholder="调动到的部门"
                               allowClear
                               treeDefaultExpandAll
-                              onChange={(value) => this.setState({
-                                data: {
-                                  ...this.state.data,
-                                  parentId: value
+                              onChange={(value) => {
+                                if (this.state.data.departId === value) {
+                                  titleTextUserIdDepartId = '上级部门不得选择自己！'
+                                } else {
+                                  titleTextUserIdDepartId = "";
+                                  debugger
+                                  let todata = false;
+                                  let datas = [];
+                                  let mydata = (children, d) => {
+                                    children.map((_d) => {
+                                      mydata(_d.children, d);
+                                      if (!todata) {
+                                        if (_d.id === value) {
+                                          datas.push(d)
+                                          datas.push(_d)
+                                          todata = true
+                                        }
+                                      } else {
+                                        datas.push(_d)
+                                      }
+                                     
+                                    })
+                                  }
+
+                                  this.state.departmentDatalist.map((_d, index) => {
+                                    if (!todata) {
+                                      mydata(_d.children, _d);
+                                    } else {
+
+                                    }
+                                  })
+
+                                  for (let key in datas) {
+                                    if (datas[key].id === this.state.data.departId) {
+                                      if (datas[key - 1] && datas[key - 1].parentId === datas[key].parentId) {
+
+                                      } else {
+                                        titleTextUserIdDepartId = '不能选择自己的下级部门！';
+                                      }
+
+                                      break;
+                                    }
+                                  }
+                                  
                                 }
-                              })}
+                                this.setState({
+                                  data: {
+                                    ...this.state.data,
+                                    parentId: value
+                                  }
+                                }, () => {
+                                  this.warningHints()
+                                })
+                              }}
                             >
                               {
                                 this.TreeNode(this.state.departmentDatalist)
@@ -433,7 +492,7 @@ class RyglBm extends Component {
                       )
                     }}
                   /> : this.state.newlyPopup.title === "刷新" ?
-                      this.toUpdate()
+                    this.toUpdate()
                     : ''
               :
               ""

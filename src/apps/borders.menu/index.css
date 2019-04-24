@@ -1,5 +1,5 @@
 .borders_menu{
-  padding-top: 48px;
+  padding-top: 75px;
   height: 100%;
 }
 
@@ -21,13 +21,13 @@
 }
 
 .borders_menu .ant-menu-dark .ant-menu-inline.ant-menu-sub{
-    border-top: 1px solid #1f1f1f;
+    /* border-top: 1px solid #1f1f1f; */
 }
 .borders_menu .ant-layout-footer{
     background:transparent
 }
 .borders_menu .ant-layout{
-    background:transparent
+    background:#cfded426
 }
 
 .borders_menu .ant-input{
@@ -85,8 +85,10 @@ padding: 4px 6px !important;
 .query_condition{
     height: 40px;
     line-height: 40px;
+    padding-left: 10px;
 }
 .query_condition div{
+    height: 18px;
     float: left;
     margin-right: 10px;
 }

@@ -29,9 +29,11 @@ function BordersMenu(MyappedComponent, page) {
 
       let JumpName = { name: '', key: '' };
       // this.catalogMapKey(this.props.catalog.att, this.props.location.pathname, JumpName);
+
       this.setState({
+      
         current: this.props.location.pathname === "/pers" ? "/rygl_ry" :
-          this.props.location.pathname === "/att" ? "/kqsb_qy" :
+          this.props.location.pathname === "/att" ? "/kqsb_sb" :
             this.props.location.pathname,
         JumpUrl: this.props.location.pathname,
         JumpName: JumpName.name,
@@ -137,12 +139,12 @@ function BordersMenu(MyappedComponent, page) {
                   <Layout>
 
                     <Content style={{ margin: '0 16px' }}>
-                      <Breadcrumb style={{ marginTop: 10, height: 30, borderBottom: '1px solid #e8e8e8' }}>
+                      <Breadcrumb style={{ marginTop: 10, height: 30 }}>
                         <Breadcrumb.Item><MyappedComponent /></Breadcrumb.Item>
                         <Breadcrumb.Item>{this.state.JumpTitle === '' ? this.props.catalog[str][0].name : this.state.JumpTitle}</Breadcrumb.Item>
                         <Breadcrumb.Item>{this.state.JumpName === '' ? this.props.catalog[str][0].vals[0].name : this.state.JumpName}</Breadcrumb.Item>
                       </Breadcrumb>
-                      <div style={{ background: '#fff', minHeight: 730 }}>
+                      <div style={{ background: '#fff', minHeight: 790, paddingLeft: 10, paddingTop: 10 }}>
                         {/* {
                           RouterPageMap?<RouterPageMap {...this}/>:''
                         } */}
@@ -152,7 +154,7 @@ function BordersMenu(MyappedComponent, page) {
                         }
                       </div>
                     </Content>
-                    <Footer style={{ textAlign: 'center' }}>
+                    <Footer style={{ textAlign: 'center',padding: '8px 50px' }}>
                       ©2019 浙江控控科技股份有限公司
                 </Footer>
                   </Layout>

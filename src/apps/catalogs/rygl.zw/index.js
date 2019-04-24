@@ -12,6 +12,7 @@ import './index.css';
 const TreeNode = TreeSelect.TreeNode;
 const { Header } = Layout;
 let titleTextUserId = "";
+let titleTextUserIdposiId = "";
 class RyglZw extends Component {
   constructor(props) {
     super(props);
@@ -82,7 +83,9 @@ class RyglZw extends Component {
     if (!this.state.data.posiName) {
       titleText = '带 * 不得为空！'
     }
-
+    if (titleTextUserIdposiId !== "") {
+      titleText = titleTextUserIdposiId
+    }
     if (titleTextUserId !== "") {
       titleText = titleTextUserId
     }
@@ -112,7 +115,7 @@ class RyglZw extends Component {
   }
   getDepartments = (text) => {
     this.selecttree() //部门内容
-    this.findPositionAll(1, this.state.pagination.pageSize,text) //部门查询
+    this.findPositionAll(1, this.state.pagination.pageSize, text) //部门查询
 
   }
   //职位内容
@@ -121,7 +124,7 @@ class RyglZw extends Component {
     })).then((params) => {
       this.setState({
         positionDatalist: params.data.rows,
-        leftDatalist:params.data.rows
+        leftDatalist: params.data.rows
       })
     }).catch((error) => {
 
@@ -129,7 +132,7 @@ class RyglZw extends Component {
   }
 
   //职位查询
-  findPositionAll = (current,pageSize) => {
+  findPositionAll = (current, pageSize,text) => {
     Util._httpPost("/project_war_exploded/position/findPositionAll.do", JSON.stringify({
       page: current,
       size: pageSize,
@@ -147,6 +150,9 @@ class RyglZw extends Component {
           pageSize: pageSize, //显示几条一页
         }
       })
+      if(text){
+        message.success(text,0.5);
+      }
 
     }).catch((error) => {
 
@@ -154,8 +160,8 @@ class RyglZw extends Component {
   }
 
 
-   //职位新增
-   addPosition = (_data) => {
+  //职位新增
+  addPosition = (_data) => {
     Util._httpPost("/project_war_exploded/position/addPosition.do", JSON.stringify({
       posiId: _data.posiId,
       parentId: !_data.parentId ? '0' : _data.parentId,
@@ -173,9 +179,9 @@ class RyglZw extends Component {
 
     })
   }
-  
-   //职位编辑
-   updatePosition = (_data) => {
+
+  //职位编辑
+  updatePosition = (_data) => {
     Util._httpPost("/project_war_exploded/position/updatePosition.do", JSON.stringify({
       posiId: _data.posiId,
       parentId: !_data.parentId ? '0' : _data.parentId,
@@ -194,8 +200,8 @@ class RyglZw extends Component {
     })
   }
 
-   //职位删除
-   deletePosition = (posiId) => {
+  //职位删除
+  deletePosition = (posiId) => {
     Util._httpPost("/project_war_exploded/position/deletePosition.do", JSON.stringify({
       posiId: posiId
     })).then((params) => {
@@ -212,15 +218,19 @@ class RyglZw extends Component {
     })
   }
 
-   //更新数据
-   toUpdate = () => {
-    setTimeout(()=>{
+  //更新数据
+  toUpdate = () => {
+    setTimeout(() => {
       this.setState({
         newlyPopup: { switch: false }
       })
-    },0)
-  
+    }, 0)
+
     this.getDepartments("刷新成功");
+  }
+
+  setSelectedRows = (selectedRows) => {
+    this.setState({ selectedRows })
   }
 
   onTreeNodeChange = (localValue) => {
@@ -243,7 +253,7 @@ class RyglZw extends Component {
 
     return (
       <div className="rygl-zw">
-       <Header style={{ background: '#fff', padding: 0 }} >
+        <Header style={{ background: '#fff', padding: 0 }} >
           <div className="query_condition">
             <div>
               职位名称：<Input value={this.state.testName} onChange={(e) => this.setState({ testName: e.target.value })} />
@@ -259,7 +269,7 @@ class RyglZw extends Component {
           </div>
 
           <div className="rygl-zw-data-datatable">
-            <DataTable onNewlyPopup={this.newlyPopup} {...this.state} />
+            <DataTable setSelectedRows={this.setSelectedRows} onGetData={this.findPositionAll} onNewlyPopup={this.newlyPopup} {...this.state} />
           </div>
           {
             //弹出框
@@ -313,9 +323,9 @@ class RyglZw extends Component {
                                   posiId: this.state.data.posiId
                                 })).then((params) => {
                                   if (params.data.flag) {
-                                    titleTextUserId = "";
+                                    titleTextUserIdposiId = "";
                                   } else {
-                                    titleTextUserId = params.data.message
+                                    titleTextUserIdposiId = params.data.message
                                   }
                                   this.warningHints();
                                 })
@@ -341,15 +351,62 @@ class RyglZw extends Component {
                               style={{ width: 300 }}
                               value={this.state.data.parentId}
                               dropdownStyle={{ maxHeight: 300, overflow: 'auto' }}
-                              placeholder="调动到的部门"
+                              placeholder="调动到的职位"
                               allowClear
                               treeDefaultExpandAll
-                              onChange={(value) => this.setState({
-                                data: {
-                                  ...this.state.data,
-                                  parentId: value
+                              onChange={(value, e, w) => {
+                                if (this.state.data.posiId === value) {
+                                  titleTextUserId = '上级职位不得选择自己！'
+                                } else {
+                                  titleTextUserId = "";
+                                  let todata = false;
+                                  let datas = [];
+                                  let mydata = (children, d) => {
+                                    children.map((_d) => {
+                                      mydata(_d.children, d);
+                                      if (!todata) {
+                                        if (_d.id === value) {
+                                          datas.push(d)
+                                          datas.push(_d)
+                                          todata = true
+                                        }
+                                      } else {
+                                        datas.push(_d)
+                                      }
+                                     
+                                    })
+                                  }
+
+                                  this.state.positionDatalist.map((_d, index) => {
+                                    if (!todata) {
+                                      mydata(_d.children, _d);
+                                    } else {
+
+                                    }
+                                  })
+                                  // mydata(this.state.positionDatalist);
+                                  for (let key in datas) {
+                                    if (datas[key].id === this.state.data.posiId) {
+                                      if (datas[key - 1] && datas[key - 1].parentId === datas[key].parentId) {
+
+                                      } else {
+                                        titleTextUserId = '不能选择自己的下级单位！';
+                                      }
+
+                                      break;
+                                    }
+                                  }
+
                                 }
-                              })}
+                                this.setState({
+                                  data: {
+                                    ...this.state.data,
+                                    parentId: value
+                                  }
+                                }, () => {
+                                  this.warningHints();
+                                })
+                              }}
                             >
                               {
                                 this.TreeNode(this.state.positionDatalist)
@@ -390,8 +447,8 @@ class RyglZw extends Component {
                       )
                     }}
                   /> : this.state.newlyPopup.title === "刷新" ?
-                      this.toUpdate()
-                : ''
+                    this.toUpdate()
+                    : ''
               :
               ""
           }

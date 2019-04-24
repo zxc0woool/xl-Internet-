@@ -15,7 +15,7 @@ const { TextArea } = Input;
 const { Header } = Layout;
 
 let personnel = {};
-
+let titleTextUserId = "";
 class RyglRy extends Component {
 
   constructor(props) {
@@ -40,7 +40,7 @@ class RyglRy extends Component {
         // { name: '离职', icon: 'user-delete' },
         // { name: '部门调整', icon: 'contacts' },
         { name: '设备人员管理', icon: 'audit' },
-        { name: '删除', icon: 'close' }
+        // { name: '删除', icon: 'close' }
       ],
       datalist: [],
       dataColumns: [
@@ -71,7 +71,7 @@ class RyglRy extends Component {
               <a onClick={() => this.newlyPopup(_d, '离职')}>离职</a>   
               <a onClick={() => this.newlyPopup(_d, '部门调整')}>部门调整</a>    
               <a onClick={() => this.newlyPopup(_d, '职位调整')}>职位调整</a>
-              <a onClick={() => this.newlyPopup(_d, '删除')}>删除</a>
+              {/* <a onClick={() => this.newlyPopup(_d, '删除')}>删除</a> */}
             </div>
           },
         }
@@ -150,7 +150,7 @@ class RyglRy extends Component {
         }
       })
       if(text){
-        message.success(text)
+        message.success(text,0.5)
       }
     
     }).catch((error) => {
@@ -383,7 +383,7 @@ class RyglRy extends Component {
               this.state.newlyPopup.switch ?
                 this.state.newlyPopup.title === "新增" || this.state.newlyPopup.title === "编辑" ?
                   <ElasticFrame
-                    style={{ width: 900, height: 650 }}
+                    style={{ width: 900, height: 480 }}
                     title={this.state.newlyPopup.title}
                     close={() => {
                       this.setState({
@@ -419,6 +419,7 @@ class RyglRy extends Component {
                       departmentDatalist={this.state.departmentDatalist} 
                       positionDatalist={this.state.positionDatalist} 
                       onWillUnmount={this.onWillUnmount} 
+                      newlyPopup={this.newlyPopup}
                       data={this.state.data} 
                       toUserID={this.state.newlyPopup.title === "编辑"}
                       {...props} 
@@ -691,7 +692,7 @@ class RyglRy extends Component {
                               this.toUpdate()
                             : this.state.newlyPopup.title === "设备人员管理" ?
                             <ElasticFrame
-                              style={{ width: 1250, height: 760 }}
+                              style={{ width: 1250, height: 670 }}
                               title={this.state.newlyPopup.title}
                               // titleText={this.state.titleText}
                               close={() => {

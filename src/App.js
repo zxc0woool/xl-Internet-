@@ -1,14 +1,14 @@
 
 
 import React, { Component } from 'react';
-import './App.css';
+import style from './App.less';
 import RouterMap from "./apps/router";
 import './js/app';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <div className={style["App"]}>
           <RouterMap />
       </div>
     );

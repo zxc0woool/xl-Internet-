@@ -5,6 +5,7 @@ import Login from './login'; //登入页面
 import Index from './index'; //首页
 import Pers from './pers';   //人事页面
 import Att from './att';     //考勤页面
+import User from './user';     //用户页面
 
 import RyglRy from './catalogs/rygl.ry';         //人员页面
 import RyglRzry from './catalogs/rygl.lzry';     //离职人员页面
@@ -39,7 +40,8 @@ class RouterMap extends React.Component {
 
                     <Route path='/pers' component={Pers}></Route>
                     <Route path='/att' component={Att}></Route>
-                    <Route path='/index' component={Index}></Route>
+                    {/* <Route path='/index' component={Index}></Route> */}
+                    <Route path='/user' component={User}></Route>
                     <Route path='/login' component={Login}></Route>
                     <Route path='/' component={Login}></Route>
 

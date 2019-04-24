@@ -93,7 +93,7 @@ class RyglLzry extends Component {
     this.getDepartment();
   }
   componentDidCatch(){
-    debugger
+
   }
   onWillUnmount = (_data, titleText) => {
     this.setState({
@@ -104,7 +104,7 @@ class RyglLzry extends Component {
   }
 
   //职位查询
-  findQuitPerson = (current, pageSize) => {
+  findQuitPerson = (current, pageSize,text) => {
     Util._httpPost("/project_war_exploded/person/findQuitPerson.do", JSON.stringify({
       page: current,
       size: pageSize,
@@ -122,7 +122,9 @@ class RyglLzry extends Component {
           pageSize: pageSize, //显示几条一页
         }
       })
-
+      if(text){
+        message.success(text,0.5);
+      }
     }).catch((error) => {
 
     })
@@ -336,7 +338,7 @@ class RyglLzry extends Component {
                       }}
                       titleText={this.state.titleText}
                       ok={() => {
-                        this.deleteQuitPerson(this.state.data.perId);
+                        this.deleteQuitPerson(this.state.data.id);
                         this.setState({
                           newlyPopup: { switch: false }
                         })

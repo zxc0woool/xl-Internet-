@@ -102,7 +102,7 @@ Calendar.prototype = {
             opts.mode == "month" ? me._refreshCalendar(opts.newDate) : me._refreshYearCalendar(opts.newDate);
             $(".calendar-year-text").text(yearText);
             me._createCalendar();
-
+            if(opts.onTimeChange) opts.onTimeChange(opts.newDate);
         })
 
         //触发选择月份
@@ -134,6 +134,7 @@ Calendar.prototype = {
             me._refreshCalendar(opts.newDate);
             $(".calendar-month-text").text(monthText);
             me._createCalendar();
+            if(opts.onTimeChange) opts.onTimeChange(opts.newDate);
         })
         $(document.body).on("click", function (e) {
             $(".dropdown-month").removeClass("open");
@@ -160,11 +161,9 @@ Calendar.prototype = {
             modeMonth = null;
         if (mode == "month") { modeMonth = viewDate.getMonth() };
 
-
         //筛选视图数据并转化未对象 要不要转化为属性
         for (let i = 0; i < data.length; i++) {
             let item = data[i];
-
 
             let start = me._getDateByString(item.startDate);
 
@@ -195,7 +194,12 @@ Calendar.prototype = {
         return new Date(year, month, date);
     },
     //私有方法
-    _createCalendar: function () {
+    _createCalendar: function (_d) {
+        if(_d){
+            this.options['data'] = _d['data'];
+            this.options['newDate'] = new Date(_d['newDate']);
+        }
+
         let me = this;
         let dateMode = me.options.mode;
 
@@ -351,7 +355,13 @@ Calendar.prototype = {
                     }
                     else {
                         viewData[renderMonth].forEach(function (item) {
-                            s += '<li><span>' + item.name + '</span></li>'
+                            if(item.color){
+                                let color = JSON.parse(item.color);
+                                s += '<li style="background-color:'+ `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})` +'"><span>' + item.name + '</span></li>'
+                            }else{
+
+                            }
+                           
                         })
                     }
                 }
@@ -401,12 +411,15 @@ Calendar.prototype = {
                 let date = renderDate.getDate();
 
                 let names = "";
+
                 if (showEvent && viewData[date] && renderDate.getMonth() == newDate.getMonth()) {
                     viewData[date].forEach(function (item) {
-                        names+= item.name + '\n'
+                        if(item.status === "上班"){
+                            names += item.name + ':[' + item.date + ']' + '\n' 
+                        }
+                        
                     })
                 }
-
                 let data = year + '年' + month + '月' + date + '日' + '\n' + names
 
                 if (renderDate.getMonth() < newDate.getMonth()) {
@@ -430,7 +443,15 @@ Calendar.prototype = {
                     }
                     else {
                         viewData[date].forEach(function (item) {
-                            s += '<li><span>' + item.name + '</span></li>'
+                            if(item.color){
+                                let color = JSON.parse(item.color);
+                                if(item.status === "上班"){
+                                    s += '<li style="background-color:'+ `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})` +'"><span>' + item.name + '</span></li>'
+                                }
+                            }else{
+                                
+                            }
+                           
                         })
                     }
                 }
@@ -468,6 +489,8 @@ $.fn.calendar = function (options) {
         if (!ui) {
             ui = new type(this, options);
             $.data(this, name, ui);
+        }else{
+            ui._createCalendar(options);
         }
         if (isSTR) {
             ret = ui[options].apply(ui, args);

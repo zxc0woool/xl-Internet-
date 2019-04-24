@@ -29,13 +29,22 @@ class DataTree extends Component {
 
 
   render() {
-
+    let rowSelections = {}
+    if(this.props.rowSelection){
+      rowSelections = this.props.rowSelection;
+    }
+   
     const rowSelection = {
+      ...rowSelections,
       onChange: (selectedRowKeys, selectedRows) => {
-        this.props.setSelectedRows(selectedRows);
+        this.props.setSelectedRows(selectedRows,selectedRowKeys);
         // console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
       }
     };
+    // if(this.props.rowSelection){
+    //   this.props.rowSelection
+
+    // }
 
     let _this = this;
 
@@ -64,7 +73,8 @@ class DataTree extends Component {
             this.props.container ? this.props.container(this.props) :
               <Table
                 bordered
-               
+                selectedRowKeys={this.props.selectedRowKeys?this.props.selectedRowKeys:()=>{}}
+                onRow={this.props.onRow?this.props.onRow:()=>{}}
                 loading={false}
                 rowSelection={rowSelection}
                 columns={this.props.dataColumns}

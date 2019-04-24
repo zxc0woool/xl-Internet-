@@ -4,10 +4,8 @@ import React, { Component } from 'react';
 import { Icon, Button } from 'antd';
 // import $ from 'jquery'
 // import Echarts from 'echarts';
+
 import './index.css';
-
-
-
 
 class ElasticFrame extends Component {
 
@@ -15,14 +13,14 @@ class ElasticFrame extends Component {
     super(props);
     this.state = {
       value: '',
-      tofingerprint:false
-
+      tofingerprint: false,
+      style: {}
     };
 
   }
 
-   
-  ToFingerprint = (e,v) =>{
+
+  ToFingerprint = (e, v) => {
 
     this.setState({
       tofingerprint: v,
@@ -32,12 +30,15 @@ class ElasticFrame extends Component {
   componentDidMount() {
 
     // let dom = document.getElementById('elastic-frame-dhxwin_hdr-div');
-  
+    this.setState({
+      style: this.props.style
+    })
+
     this.dragAndDrop();
   }
 
-  componentDidUpdate(){
-    
+  componentDidUpdate() {
+
   }
 
   ok = () => {
@@ -49,23 +50,24 @@ class ElasticFrame extends Component {
   /**
    * mod
    */
-  dragAndDrop=()=>{
-    
-    let mod = document.getElementById('elastic-frame-dhxwin_hdr-div')
-    let mod2 = document.getElementById('elastic-frame-dhxwin_hdr')
+  dragAndDrop = () => {
+   
+    let mod = document.getElementById('elastic-frame-dhxwin_hdr-div');
+    let mod2 = document.getElementById('elastic-frame-dhxwin_hdr');
+    let mod3 = document.getElementById('elastic-frame');
     mod2.onmousedown = function (ev) {
-
       let distanceX = ev.clientX - mod.offsetLeft;
       let distanceY = ev.clientY - mod.offsetTop;
-
-      mod.onmousemove = function (ev) {
-        mod.style.left = ev.clientX - distanceX + 'px';
-        mod.style.top = ev.clientY - distanceY + 'px';
+     
+      mod3.onmousemove = function (ev) {
+        mod.style.marginLeft = ev.clientX - distanceX + 'px';
+        mod.style.marginTop = ev.clientY - distanceY + 'px';
       };
 
       mod.onmouseup = function () {
         mod.onmousemove = null;
         mod.onmouseup = null;
+        mod3.onmousemove = null;
       };
     }
   }
@@ -74,21 +76,20 @@ class ElasticFrame extends Component {
   render() {
 
     return (
-      <div className="elastic-frame">
+      <div className="elastic-frame" id={'elastic-frame'}>
         <div className="dhxwin_active" style={this.props.style} id={'elastic-frame-dhxwin_hdr-div'}>
-          {/* <div className="dhxwin_hdr"></div> */}
+          {/* <div className="dhxwin_hdr"></div> onMouseDown={this.dragAndDrop} */}
           <div className="dhxwin_hdr" id={'elastic-frame-dhxwin_hdr'}>
             <div className="dhxwin_text">
               <div className="dhxwin_text_inside">{this.props.title}</div>
             </div>
             <div className="dhxwin_btns">
               {
-                !this.state.tofingerprint?
-                <div title="关闭" className="dhxwin_button dhxwin_button_close" onClick={this.props.close}>
-                  <Icon type="close" title="关闭" />
-                </div>:''
+                !this.state.tofingerprint ?
+                  <div title="关闭" className="dhxwin_button dhxwin_button_close" onClick={this.props.close}>
+                    <Icon type="close" title="关闭" />
+                  </div> : ''
               }
-             
             </div>
           </div>
 
@@ -98,9 +99,8 @@ class ElasticFrame extends Component {
             }
           </div>
           <div className="elastic_button">
-
-              <Button disabled={this.props.titleText !== ""} onClick={this.props.ok}>确定</Button>
-              <Button onClick={this.props.close}>取消</Button>
+            <Button disabled={this.props.titleText !== ""} onClick={this.props.ok}>确定</Button>
+            <Button onClick={this.props.close}>取消</Button>
           </div>
 
         </div>

@@ -23,7 +23,7 @@ class KqsbSb extends Component {
       titleText: '',
       serialNumber: '',
       parameterConfigureName: "网络参数",
-
+      selectedRows:[],
       previewVisible: false,
       previewImage: "",
       fileList: [],
@@ -85,7 +85,7 @@ class KqsbSb extends Component {
               <div className="rygl-bm-operation">
                 <a onClick={() => this.newlyPopup(_d, '编辑')}>编辑</a>
                 <a onClick={() => this.newlyPopup(_d, '远程配置')}>远程配置</a>
-                <a onClick={() => { }}>删除</a>
+                <a onClick={() => this.newlyPopup(_d, '删除')}>删除</a>
               </div>
             )
           },
@@ -188,7 +188,8 @@ class KqsbSb extends Component {
         title: title,
         switch: true,
       },
-      data: _d
+      data: _d,
+      dataText:''
     })
   }
 
@@ -269,7 +270,31 @@ class KqsbSb extends Component {
     })
 
   }
+  setSelectedRows = (selectedRows) => {
+    this.setState({ selectedRows })
+  }
+  //删除设备
+  deleteAttendance = (ids) => {
+    //project_war_exploded/person/addPerson.do
+    for(let key in this.state.selectedRows){
+      if(ids == ""){
+        ids += this.state.selectedRows[key].attId
+      }else{
+        ids += ',' + this.state.selectedRows[key].attId
+      }
+      
+    }
+    
+    Util._httpPost("/project_war_exploded/attendance/deleteAttendance.do", {
+      attId:ids
+    }).then((params) => {
+      this.findAll(1, this.state.pagination.pageSize);
+      message.success(params.data.message)
+    }).catch((error) => {
 
+    })
+
+} 
   //设备查询
   findAll = (current, pageSize, text) => {
     Util._httpPost("/project_war_exploded/attendance/findAll.do", JSON.stringify({
@@ -303,7 +328,7 @@ class KqsbSb extends Component {
       })
 
       if (text) {
-        message.success(text)
+        message.success(text,0.5)
       }
 
     }).catch((error) => {
@@ -311,10 +336,10 @@ class KqsbSb extends Component {
     })
   }
   //设备编辑
-  updateDepartment = (_d) => {
+  updateAttendance = (_d) => {
 
     _d.config = JSON.stringify(_d.config)
-    Util._httpPost("/project_war_exploded/department/updateDepartment.do", JSON.stringify({
+    Util._httpPost("/project_war_exploded/attendance/updateAttendance.do", JSON.stringify({
       ..._d
     })).then((params) => {
 
@@ -332,21 +357,21 @@ class KqsbSb extends Component {
 
   //设置设备密码
   setPassWord = () => {
-
     let IP = 'http://' + this.state.data.attIp + ':' + this.state.data.attPort;
     Util.$http.post(IP + '/setPassWord', {
       oldPass: this.state.data.attPass,
       newPass: this.state.data.newPass
     }).then((params) => {
-      this.setDataText(JSON.stringify(params.data.data) + ' ' + (params.data.msg ? params.data.msg : ' ') + ' success:' + params.data.success + '\n');
+      this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+ 
     })
 
   }
 
   //有线网络配置
   setNetInfo = () => {
+
     let IP = 'http://' + this.state.data.attIp + ':' + this.state.data.attPort;
     Util.$http.post(IP + '/setNetInfo', {
       pass: this.state.data.attPass,
@@ -358,7 +383,8 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+
+
     })
 
   }
@@ -397,7 +423,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+ 
     })
 
   }
@@ -413,7 +439,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+  
     })
 
     //设备心跳回调
@@ -423,7 +449,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+  
     })
 
     //注册照片回调
@@ -433,7 +459,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+    
     })
 
 
@@ -453,7 +479,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+   
     })
 
   }
@@ -467,7 +493,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+  
     })
   }
 
@@ -480,7 +506,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+    
     })
   }
 
@@ -492,7 +518,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+    
     })
   }
   //设置时间
@@ -504,7 +530,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+     
     })
   }
 
@@ -516,7 +542,7 @@ class KqsbSb extends Component {
       this.setState({ serialNumber: params.data.data });
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-      this.setDataText('系统错误');
+
     })
   }
 
@@ -559,7 +585,7 @@ class KqsbSb extends Component {
         <div className="kqsb-sb-data">
 
           <div className="kqsb-sb-data-datatable">
-            <DataTable onNewlyPopup={this.newlyPopup} {...this.state} />
+            <DataTable setSelectedRows={this.setSelectedRows} onGetData={this.findAll} onNewlyPopup={this.newlyPopup} {...this.state} />
           </div>
           {
             //弹出框
@@ -591,7 +617,7 @@ class KqsbSb extends Component {
                         if (title === "新增") {
                           this.addAttendance(this.state.data);
                         } else if (title === "编辑") {
-                          this.updateDepartment(this.state.data);
+                          this.updateAttendance(this.state.data);
                         }
 
                       } else {
@@ -663,8 +689,9 @@ class KqsbSb extends Component {
                   }}
                 /> : this.state.newlyPopup.title === "远程配置" ?
                   <ElasticFrame
-                    style={{ width: 800, height: 750 }}
+                    style={{ width: 800, height: 670 }}
                     title={this.state.newlyPopup.title}
+                    
                     close={() => {
                       this.setState({
                         newlyPopup: { switch: false }
@@ -792,7 +819,11 @@ class KqsbSb extends Component {
                                 </Select>
                               </div>
                               <div className="kqsb-sb_tableStyle_div"><label>陌生人开关</label>
-                                <Input value={config.recStrangerType} onChange={(e) => this.setState({ data: { ...this.state.data, config: { ...this.state.data.config, recStrangerType: e.target.value } } })} type="text" className="valid" />
+                                {/* <Input value={config.recStrangerType} onChange={(e) => this.setState({ data: { ...this.state.data, config: { ...this.state.data.config, recStrangerType: e.target.value } } })} type="text" className="valid" /> */}
+                                <Select value={config.recStrangerType} onChange={(value) => this.setState({ data: { ...this.state.data, config: { ...this.state.data.config, recStrangerType: value } } })} >
+                                  <Option value="1">识别</Option>
+                                  <Option value="2">不识别</Option>
+                                </Select>
                               </div>
                               <div className="kqsb-sb_tableStyle_div"><label>串口自定义</label>
                                 <Input value={config.comModContent} onChange={(e) => this.setState({ data: { ...this.state.data, config: { ...this.state.data.config, comModContent: e.target.value } } })} type="text" className="valid" />
@@ -925,11 +956,18 @@ class KqsbSb extends Component {
                     <ElasticFrame
                       style={{ width: 280, height: 150 }}
                       title={"提示"}
+                      titleText={this.state.titleText}
                       close={() => {
                         this.setState({
                           newlyPopup: { switch: false }
                         })
                       }}
+                      ok={() => {
+                          this.deleteAttendance(this.state.data.attId);
+                          this.setState({
+                            newlyPopup: { switch: false }
+                          })
+                        }}
                       renderDom={(props) => {
                         return (
                           <div className="">

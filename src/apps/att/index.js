@@ -10,6 +10,8 @@ import BcglPc from '../catalogs/bcgl.pc';         //班次页面
 import BcglSjd from '../catalogs/bcgl.sjd';       //时间段页面
 import KqsbQy from '../catalogs/kqsb.qy';         //区域页面
 import KqsbSb from '../catalogs/kqsb.sb';         //设备页面
+
+import TjbbRdkxqb from '../catalogs/tjbb.rdkxqb';   //日打卡详情表页面
 import TjbbYmxbb from '../catalogs/tjbb.ymxbb';   //月明细报表页面
 import TjbbYtjbb from '../catalogs/tjbb.ytjbb';   //月统计报表页面
 
@@ -39,7 +41,10 @@ function page(page) {
 
     case "/bcgl_pc":
     return <BcglPc />;
-    
+
+    case "/tjbb_rdkxqb":
+    return <TjbbRdkxqb />;
+
     case "/tjbb_ymxbb":
     return <TjbbYmxbb />;
 
