@@ -766,8 +766,6 @@ class Information extends Component {
                         <Input type="text" disabled className="valid" />
                       </td>
 
-
-
                       <th>
                         <label>卡号</label>
                       </th>

@@ -404,7 +404,6 @@ class RyglBm extends Component {
                                   titleTextUserIdDepartId = '上级部门不得选择自己！'
                                 } else {
                                   titleTextUserIdDepartId = "";
-                                  debugger
                                   let todata = false;
                                   let datas = [];
                                   let mydata = (children, d) => {

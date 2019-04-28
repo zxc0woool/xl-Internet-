@@ -6,7 +6,9 @@
   font-family: Arial,微软雅黑;
   width: 100%;
 }
-
+.required {
+  color: red;
+}
 .displayNone{
   display: none;
 }

@@ -19,9 +19,11 @@ class BcglBmpb extends Component {
     super(props);
     this.state = {
       data: {},
-      titleText:'',
+      mydata: {},
+      titleText: '',
       treeSelectValue: undefined,
       setSelectedRows: [],
+      selectedRowKeys: [],
       newlyPopup: {
         title: "",
         switch: true,
@@ -32,7 +34,7 @@ class BcglBmpb extends Component {
       },
       titlelist: [
         { name: '刷新', icon: 'redo' },
-        { name: '新增', icon: 'file-add'},
+        { name: '新增', icon: 'file-add' },
         { name: '删除', icon: 'close' },
         { name: '新增临时排班', icon: 'file-add' },
       ],
@@ -91,57 +93,19 @@ class BcglBmpb extends Component {
 
   componentDidMount() {
 
-    // const datalist = [];
-    // for (let i = 0; i < 100; i++) {
-    //   datalist.push({
-    //     key: i + 1,
-    //     perId: `编号 ${i + 1}`,
-    //     perName: '姓名' + `小${i + 1}`,
-    //     departmentName: 'A' + i + 1 + '部门',
-    //     entryDate: '2019-3-11 13:20:12'
-
-    //   });
-    // }
-    // this.setState({ datalist });
-
     this.getFindAllShifts();
 
-    this.calendar(null, new Date().Format("yyyy-MM-dd"))
+    // this.calendar(null, new Date().Format("yyyy-MM-dd"))
 
     this.getDepartment();
+
+    this.findAllScheduling(this.state.leftDatalist[0])
   }
 
   calendar = (data, date) => {
 
     if (!data) {
       data = [];
-      // data = [
-      //   { startDate: "2018-6-10", name: "事件1" },
-      //   { startDate: "2018-7-10", name: "事件1" },
-      //   { startDate: "2018-8-10", name: "事件1" },
-      //   { startDate: "2018-9-10", name: "事件1" },
-      //   { startDate: "2018-10-10", name: "事件1" },
-      //   { startDate: "2018-11-1", name: "事件2" },
-      //   { startDate: "2018-11-2", name: "事件11" },
-      //   { startDate: "2018-12-1", name: "事件12" },
-      //   { startDate: "2018-12-1", name: "事件13" },
-      //   { startDate: "2018-12-1", name: "事14" },
-      //   { startDate: "2019-1-10", name: "事件14" },
-      //   { startDate: "2019-2-10", name: "事件14" },
-      //   { startDate: "2019-3-10", name: "事件14" },
-      //   { startDate: "2019-4-10", name: "事件14" },
-      //   { startDate: "2019-5-10", name: "事件14" },
-      //   { startDate: "2019-6-10", name: "事件14" },
-      //   { startDate: "2019-7-10", name: "事件14" },
-      //   { startDate: "2019-8-10", name: "事件14" },
-      //   { startDate: "2019-9-10", name: "事件14" },
-      //   { startDate: "2019-10-10", name: "事件14" },
-      //   { startDate: "2019-11-10", name: "事件14" },
-      //   { startDate: "2019-12-10", name: "事件14" },
-      //   { startDate: "2020-1-10", name: "事件14" },
-      //   { startDate: "2020-2-10", name: "事件14" },
-      // ]
-
     }
     // $(".calendar").html("");
     $(".calendar").calendar({
@@ -217,9 +181,9 @@ class BcglBmpb extends Component {
   warningHints = () => {
     let { treeSelectValue, setSelectedRows } = this.state
     let titleText = ''
-   
 
-    if (!(setSelectedRows.length > 0)) {
+
+    if (setSelectedRows.length !== 1) {
 
       titleText = "普通排班 只能选择一个班次！";
 
@@ -258,19 +222,62 @@ class BcglBmpb extends Component {
   }
   newlyPopup = (_d, title) => {
     // _d.
+    let {addDatalist } = this.state;
+
+    let SelectedRows = [];
+    let selectedRowKey=[];
+    for (let k in addDatalist) {
+      if (addDatalist[k].id === _d.id) {
+        SelectedRows.push(addDatalist[k]);
+        selectedRowKey.push(addDatalist[k].key)
+        break;
+
+      }
+    }
 
     this.setState({
       data: _d,
       titleText: "",
+      setSelectedRows:SelectedRows,
+      selectedRowKeys:selectedRowKey,
       newlyPopup: {
         title: title,
         switch: true
       }
-    },()=>{
+    }, () => {
       this.warningHints()
     })
   }
+  //编辑部门排班
+  updateScheduling = (_data) => {
+    let { setSelectedRows } = this.state
 
+    if (setSelectedRows.length !== 1) {
+      this.setState({
+        titleText: "普通排班 只能选择一个班次！",
+        newlyPopup: {
+          title: "新增",
+          switch: true
+        }
+      })
+      return false;
+    }
+
+    _data.startTime = _data.startTime ? (new Date(_data.startTime)).Format("yyyy-MM-dd") : _data.startTime;
+    _data.endTime = _data.endTime ? (new Date(_data.endTime)).Format("yyyy-MM-dd") : _data.endTime;
+    _data.shiftsId = setSelectedRows[0].id;
+
+    Util._httpPost("/project_war_exploded/Scheduling/updateScheduling.do", JSON.stringify({
+      ..._data
+    })).then((params) => {
+      // this.onGetData(1, this.state.pagination.pageSize);
+      this.findAllScheduling(this.state.mydata)
+     
+      message.success(params.data.message)
+    }).catch((error) => {
+
+    })
+  }
   //添加部门排班
   addDepartmentalScheduling = (_data) => {
     let { treeSelectValue, setSelectedRows } = this.state
@@ -306,6 +313,7 @@ class BcglBmpb extends Component {
       ..._data
     })).then((params) => {
       // this.onGetData(1, this.state.pagination.pageSize);
+      this.findAllScheduling(this.state.mydata)
       message.success(params.data.message)
     }).catch((error) => {
 
@@ -326,7 +334,13 @@ class BcglBmpb extends Component {
 
 
   //部门排班查询
-  findAllScheduling = (_d) => {
+  findAllScheduling = (_d, text) => {
+    if (!_d) {
+      return false;
+    }
+    if (!_d.id) {
+      return false;
+    }
     Util._httpPost("/project_war_exploded/Scheduling/findAllScheduling.do", JSON.stringify({
       departId: _d.id
     })).then((params) => {
@@ -338,17 +352,40 @@ class BcglBmpb extends Component {
 
       this.setState({
         datalist: data,
+        mydata: _d
       })
       this.getWhetherHoliday(data, new Date().Format("yyyy-MM-dd"))
       // this.calendar(data);
-
+      if (text) {
+        message.success(text)
+      }
     }).catch((error) => {
 
     })
   }
 
-  render() {
+  //更新数据
+  toUpdate = () => {
+    setTimeout(() => {
+      if(this.state.newlyPopup.switch){
+        this.findAllScheduling(this.state.mydata, "刷新成功")
+      }
+      this.setState({
+        newlyPopup: { switch: false }
+      })
+     
+      
+    }, 0)
+  
+  }
 
+
+  render() {
+    const { selectedRowKeys } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      hideDefaultSelections: true,
+    };
     return (
       <div className="bcgl_bmpb">
         <div className="bcgl_bmpb-data">
@@ -380,7 +417,7 @@ class BcglBmpb extends Component {
 
                         } else if (title == "编辑") {
 
-                          // this.setPerson(personnel, true)
+                          this.updateScheduling(this.state.data, true)
 
                         } else if (title == "新增临时排班") {
 
@@ -422,7 +459,7 @@ class BcglBmpb extends Component {
                               onChange={(treeSelectValue) => {
                                 console.log(treeSelectValue);
 
-                                this.setState({ treeSelectValue },()=>{
+                                this.setState({ treeSelectValue }, () => {
                                   this.warningHints()
                                 });
                               }}
@@ -485,7 +522,7 @@ class BcglBmpb extends Component {
                                   <label className="required">{this.state.titleText}</label>
                                 </th>
                                 <td>
-                                 
+
                                 </td>
                               </tr>
 
@@ -495,11 +532,17 @@ class BcglBmpb extends Component {
                             style={{ height: 350, width: 620, float: 'left', marginTop: 64 }}
                             scroll={{ y: 315 }}
                             closeTitle={true}
+                            rowSelection={rowSelection}
                             closePagination={true}
                             onNewlyPopup={() => { }}
                             {...this.state}
-                            setSelectedRows={(_d) => {
-                              this.setState({ setSelectedRows: _d },()=>{
+                            setSelectedRows={(setSelectedRows) => {
+                              let selectedRowKeys = [];
+                              for (let key in setSelectedRows) {
+                                selectedRowKeys.push(setSelectedRows[key].key);
+                              }
+
+                              this.setState({ setSelectedRows, selectedRowKeys }, () => {
                                 this.warningHints()
                               })
                             }}
@@ -524,6 +567,8 @@ class BcglBmpb extends Component {
                         this.deleteDepartmentalScheduling(this.state.data.schedulingId);
                         this.setState({
                           newlyPopup: { switch: false }
+                        },()=>{
+                          this.findAllScheduling(this.state.mydata)
                         })
                       }}
                       renderDom={(props) => {
@@ -533,7 +578,9 @@ class BcglBmpb extends Component {
                       </div>
                         )
                       }}
-                    /> : ""
+                    /> : this.state.newlyPopup.title === "刷新" ?
+                      this.toUpdate()
+                      : ""
                 :
                 ""
             }

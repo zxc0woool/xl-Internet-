@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom'
 import Util from '../../uilt/http.utils';
-
+import About from '../controls/about';
+import Personal from '../controls/personal';
 import cookie from '../../uilt/cookie';
 import logo from '../../images/login/logo.png';
 import './index.css';
@@ -17,6 +18,16 @@ function HeadNavigationBar(MyappedComponent) {
         UserName: '',
         current: '',
         url: '',
+        popup: {
+          about: {
+            title: '关于',
+            switch: false
+          },
+          personal: {
+            title: '个人信息',
+            switch: false
+          }
+        },
         catalog: {
           pers: [
             {
@@ -67,7 +78,7 @@ function HeadNavigationBar(MyappedComponent) {
               vals: [
                 { name: '日打卡详情表', url: '/tjbb_rdkxqb' },
                 { name: '月明细报表', url: '/tjbb_ymxbb' },
-                { name: '月统计报表', url: '/tjbb_ytjbb' }
+                // { name: '月统计报表', url: '/tjbb_ytjbb' }
               ]
             },
             // {
@@ -120,6 +131,7 @@ function HeadNavigationBar(MyappedComponent) {
     }
 
     render() {
+      let { popup } = this.state
       return (
         <div className="top-head-navigation-bar">
           <div className="head-navigation-bar">
@@ -158,12 +170,34 @@ function HeadNavigationBar(MyappedComponent) {
             <div className="top-r-box-showcompany">
               <span title={this.state.UserName} className="top-user">用户：{this.state.UserName}</span>
               <div title="用户" className="top-icon">
-                {/* <Link to="/user"> */}
+                <a onClick={() => {
+                  this.setState({
+                    popup: {
+                      ...this.state.popup,
+                      personal: {
+                        title: '个人信息',
+                        switch: true
+                      }
+                    }
+                  });
+                }}>
                 <Icon type="user" />
-                {/* </Link> */}
+                </a>
               </div>
               <div title="关于" className="top-icon">
-                <Icon type="exclamation-circle" />
+                <a onClick={() => {
+                  this.setState({
+                    popup: {
+                      ...this.state.popup,
+                      about: {
+                        title: '关于',
+                        switch: true
+                      }
+                    }
+                  });
+                }}>
+                  <Icon type="exclamation-circle" />
+                </a>
               </div>
               <div title="帮助" className="top-icon">
                 <Icon type="question-circle" />
@@ -174,6 +208,29 @@ function HeadNavigationBar(MyappedComponent) {
 
           </div>
           <MyappedComponent {...this.props} {...this.state} />
+          {
+            popup.about.switch ? <About onNewlyPopup={
+              (about) => {
+                this.setState({
+                  popup: {
+                    ...this.state.popup,
+                    about: about
+                  }
+                });
+              }
+            } /> : popup.personal.switch ? <Personal onNewlyPopup={
+              (personal) => {
+                this.setState({
+                  popup: {
+                    ...this.state.popup,
+                    personal: personal
+                  }
+                });
+              }
+            } />
+                : ""
+          }
+
         </div>
 
       );

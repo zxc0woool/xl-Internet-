@@ -48,7 +48,7 @@ class BcglPc extends Component {
           range: 12,
           visual: false,
           name: "月",
-          val: 12
+          val: 31
         }
       },
       displayColorPicker: false,
@@ -434,7 +434,7 @@ class BcglPc extends Component {
             id++;
             datalist.push({
               id: _d.slotNumber + '_' + id,
-              val: k + 1 + "月",
+              val: k + 1 + "天",
               data: _d.startWork + "-" + _d.endWork,
               knownData: [],
               choice: false,
@@ -587,7 +587,7 @@ class BcglPc extends Component {
               id++;
               datalist.push({
                 id: data.slotNumber + '_' + id,
-                val: k + 1 + "月",
+                val: k + 1 + "天",
                 data: data.startWork + "-" + data.endWork,
                 knownData: [],
                 choice: false,

@@ -9,15 +9,15 @@ import './index.css';
 import moment from 'moment';
 
 const { Header } = Layout;
+let memoryDepartmentId = "1";
 class TjbbYmxbb extends Component {
-
-
 
   constructor(props) {
     super(props);
     this.state = {
       localValue: '',
-      startTime: moment(new Date(), "YYYY-MM"),
+      startTime: new Date().Format('yyyy-MM'),
+      perId: "",
       newlyPopup: {
         title: "",
         switch: true,
@@ -34,18 +34,19 @@ class TjbbYmxbb extends Component {
         {
           title: '人员编号',
           dataIndex: 'perId',
-          width: 100,
+          // width: 100,
+          render: text => <div style="width: 100px">{text}+++</div>,
         }, {
           title: '姓名',
           dataIndex: 'perName',
-          width: 100,
+          render: text => <div style="width: 100px">{text}+++</div>,
         }, {
           title: '部门编号',
-          dataIndex: 'departmentName',
+          dataIndex: 'departmentId',
           width: 100,
         }, {
           title: '部门名称',
-          dataIndex: 'entryDate',
+          dataIndex: 'departName',
           width: 100,
         }
       ],
@@ -57,20 +58,13 @@ class TjbbYmxbb extends Component {
 
   componentDidMount() {
 
-    // const datalist = [];
-    // for (let i = 0; i < 100; i++) {
-    //   datalist.push({
-    //     key: i + 1,
-    //     perId: `编号 ${i + 1}`,
-    //     perName: '姓名' + `小${i + 1}`,
-    //     departmentName: 'A' + i + 1 + '部门',
-    //     entryDate: '2019-3-11 13:20:12'
-
-    //   });
-    // }
-    // this.setState({ datalist });
- 
     this.maxValue(this.state.startTime);
+    let I = setInterval(() => {
+      if (this.state.leftDatalist[0]) {
+        this.monthlyDetailedReport(1, this.state.pagination.pageSize, this.state.perId, this.state.leftDatalist[0].id, this.state.startTime)
+        clearInterval(I);
+      }
+    }, 0)
 
     this.getDepartment();
   }
@@ -84,23 +78,42 @@ class TjbbYmxbb extends Component {
 
       return "日一二三四五六".charAt(date.getDay());
     };
+    let datatest = {
+      '1':'√',
+      '2':'◑',
+      '3':'◐',
+      '4':'△',
+      '5':'×',
+      '6':'☒'
+    }
     let dataColumns = [
       {
         title: '人员编号',
         dataIndex: 'perId',
-        width: 100,
+        render: text => {
+          return <div style={{wordWrap: 'break-word', wordBreak: 'break-all', width: 60 }}>{text}</div>
+        },
       }, {
         title: '姓名',
         dataIndex: 'perName',
         width: 100,
+        render: text => {
+          return <div style={{ width: 60 }}>{text}</div>
+        },
       }, {
         title: '部门编号',
-        dataIndex: 'departmentName',
+        dataIndex: 'departmentId',
         width: 100,
+        render: text => {
+          return <div style={{ width: 60 }}>{text}</div>
+        },
       }, {
         title: '部门名称',
-        dataIndex: 'entryDate',
+        dataIndex: 'departName',
         width: 100,
+        render: text => {
+          return <div style={{ width: 60 }}>{text}</div>
+        },
       }
     ];
     let _d = new Date(dateval);
@@ -122,21 +135,37 @@ class TjbbYmxbb extends Component {
         title: () => {
           return <div>{_d.lastday}<br />{_d.week}</div>
         },
-        dataIndex: 'date' + _d.lastday,
-        width: 20,
+        dataIndex: new Date(this.state.startTime).Format('yyyy-MM') + '-' + (_d.lastday < 10 ? '0' + _d.lastday : _d.lastday),
+        // width: 20,
+        render: text => {
+          return <div style={{ width: 20 }}>{datatest[text]}</div>
+        },
       })
     })
-    this.setState({dataColumns})
+
+    if (this.state.leftDatalist[0]) {
+      this.monthlyDetailedReport(1, this.state.pagination.pageSize, this.state.perId, this.state.leftDatalist[0].id, this.state.startTime)
+
+    }
+
+    this.setState({ dataColumns })
   }
 
-
-  monthlyDetailedReport = (current, pageSize, departmentId, text) => {
-
+  /**
+   * @current 当前页数
+   * @pageSize 显示几条一页
+   * @perId 人员id
+   * @departmentId 部门id
+   * @text
+   */
+  monthlyDetailedReport = (current, pageSize, perId, departmentId, startTime, text) => {
+    memoryDepartmentId = departmentId;
     Util._httpPost("/project_war_exploded/reportForm/monthlyDetailedReport.do", JSON.stringify({
-
-      departmentId: departmentId,
       page: current,
       size: pageSize,
+      month: new Date(startTime).Format('yyyy-MM'),
+      perId: perId,
+      departmentId: departmentId
     })).then((params) => {
       let data = [];
       for (let key in params.data.rows) {
@@ -151,7 +180,7 @@ class TjbbYmxbb extends Component {
         }
       })
       if (text) {
-        message.success(text,0.5)
+        message.success(text, 0.5)
       }
 
     }).catch((error) => {
@@ -160,7 +189,18 @@ class TjbbYmxbb extends Component {
 
   }
 
-
+  //更新数据
+  toUpdate = () => {
+    setTimeout(() => {
+      if(this.state.newlyPopup.switch){
+        this.monthlyDetailedReport(1, this.state.pagination.pageSize, this.state.perId, memoryDepartmentId, this.state.startTime,'刷新成功')
+      }
+      this.setState({
+        newlyPopup: { switch: false }
+      })
+    }, 0)
+  
+  }
 
   //部门内容
   getDepartment = () => {
@@ -175,6 +215,7 @@ class TjbbYmxbb extends Component {
   }
 
   render() {
+    
     return (
       <div className="tjbb-ymxbb">
         <Header style={{ background: '#fff', padding: 0 }} >
@@ -188,23 +229,28 @@ class TjbbYmxbb extends Component {
             </div>
 
             <div>
-              人员名称<Input value={this.state.userName} onChange={(e) => this.setState({ userName: e.target.value })} />
+              人员编号<Input value={this.state.perId} onChange={(e) => this.setState({ perId: e.target.value })} />
             </div>
             <div>
-              <Button onClick={() => {this.maxValue(this.state.startTime)}} icon="search">搜索</Button>
+              <Button onClick={() => { this.maxValue(this.state.startTime) }} icon="search">搜索</Button>
             </div>
+            <span style={{float:'right',color: '#693be6'}}>正常: √ 迟到: ◑ 早退: ◐ 休息: △ 旷工: × 上班或下班未打卡: ☒</span>
           </div>
         </Header>
         <div className="tjbb-ymxbb-data">
           <div className="tjbb-ymxbb-data-datatree">
-            <DataTree {...this.state} />
+            <DataTree ongetfindAllByDepartment={(_d) => this.monthlyDetailedReport(1, this.state.pagination.pageSize, this.state.perId, _d.id, this.state.startTime)} {...this.state} />
           </div>
 
           <div className="tjbb-ymxbb-data-datatable">
-            <DataTable onNewlyPopup={() => { }} {...this.state} />
+            <DataTable scroll={{ x: '120%' }} onNewlyPopup={() => { }} {...this.state} />
           </div>
         </div>
-
+        {
+          this.state.newlyPopup.title === "刷新" ?
+          this.toUpdate()
+          : ""
+        }
       </div>
     );
   }

@@ -699,6 +699,7 @@ class KqsbSb extends Component {
                     }}
 
                     renderDom={(props) => {
+                      debugger
                       return (
                         <div className="kqsb-sb_newly_added">
 
