@@ -256,7 +256,8 @@ class RyglZw extends Component {
         <Header style={{ background: '#fff', padding: 0 }} >
           <div className="query_condition">
             <div>
-              职位名称：<Input value={this.state.testName} onChange={(e) => this.setState({ testName: e.target.value })} />
+              职位名称：<Input value={this.state.testName} onKeyDown={(event) => {
+                if (event.keyCode == 13) this.findPositionAll(1, this.state.pagination.pageSize)}} onChange={(e) => this.setState({ testName: e.target.value })} />
             </div>
             <div>
               <Button onClick={() => this.findPositionAll(1, this.state.pagination.pageSize)} icon="search">搜索</Button>

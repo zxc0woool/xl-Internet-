@@ -84,11 +84,12 @@ class Login extends Component {
                             UserPassword: password,
                             sessionId: params.data.sessionId,
                             token:params.data.token,
-                            memory: this.state.memory
+                            memory: this.state.memory,
+                            superStatus:params.data.superStatus
                         }
                     }))
                     Util.setAuthToken(params.data.token);
-                    this.props.history.push('/pers');
+                    this.props.history.push('/index');
                 } else {
                     //登入失败
                     message.error("账号不存在或密码错误！")

@@ -12,6 +12,7 @@ class KqsbSb extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      visible:false,
       data: {
         config: {}
       }, //打开的数据
@@ -23,7 +24,7 @@ class KqsbSb extends Component {
       titleText: '',
       serialNumber: '',
       parameterConfigureName: "网络参数",
-      selectedRows:[],
+      selectedRows: [],
       previewVisible: false,
       previewImage: "",
       fileList: [],
@@ -139,7 +140,7 @@ class KqsbSb extends Component {
 
 
         //新添加的  参数
-        isDHCPMod: '2', //DHCP 模式选择
+        isDHCPMod: '1', //DHCP 模式选择
         gateway: '192.168.2.1', //网关 
         subnetMask: '255.255.255.0', //子网掩码
         DNS: '8.8.8.8', //DNS 服务器 
@@ -166,9 +167,9 @@ class KqsbSb extends Component {
           wg: '#34WG{idcardNum}#', //韦根输出 
           recRank: '1', //照片防伪等级 
 
-          callbackUrl: 'http://192.168.1.188:9901/attendance',
-          callbackHeartbeatUrl: 'http://192.168.1.188:9901/heartbeat',
-          callbackPhotoUrl: 'http://192.168.1.188:9901/imgreg',
+          callbackUrl: 'http://192.168.1.188:8080/project_war_exploded/reportForm/Callback.do',
+          callbackHeartbeatUrl: 'http://192.168.1.188:8080/project_war_exploded/',
+          callbackPhotoUrl: 'http://192.168.1.188:8080/project_war_exploded/person/addfeature.do',
         },
 
 
@@ -189,7 +190,7 @@ class KqsbSb extends Component {
         switch: true,
       },
       data: _d,
-      dataText:''
+      dataText: ''
     })
   }
 
@@ -234,9 +235,9 @@ class KqsbSb extends Component {
       wg: '#34WG{idcardNum}#', //韦根输出 
       recRank: '1', //照片防伪等级 
 
-      callbackUrl: 'http://192.168.1.188:9901/attendance',
-      callbackHeartbeatUrl: 'http://192.168.1.188:9901/heartbeat',
-      callbackPhotoUrl: 'http://192.168.1.188:9901/imgreg',
+      callbackUrl: 'http://192.168.1.188:8080/project_war_exploded/reportForm/Callback.do',
+      callbackHeartbeatUrl: 'http://192.168.1.188:8080/project_war_exploded/',
+      callbackPhotoUrl: 'http://192.168.1.188:8080/project_war_exploded/person/addfeature.do',
     }
 
     if (!_data.config) {
@@ -258,6 +259,19 @@ class KqsbSb extends Component {
       _data.attPass = '12345678'
     }
 
+    if (_data.attScene === "签到/签退") {
+      _data.attScene = "8"
+    } else if (_data.attScene === "签到") {
+      _data.attScene = "9"
+    } else if (_data.attScene === "签退") {
+      _data.attScene = "10"
+    } else if (_data.attScene === "门禁") {
+      _data.attScene = "11"
+    }
+    if (_data.attType === "离线版") {
+      _data.attType = "4"
+    }
+
     Util._httpPost('project_war_exploded/attendance/addAttendance.do', {
       ..._data
     }).then((params) => {
@@ -276,17 +290,17 @@ class KqsbSb extends Component {
   //删除设备
   deleteAttendance = (ids) => {
     //project_war_exploded/person/addPerson.do
-    for(let key in this.state.selectedRows){
-      if(ids == ""){
+    for (let key in this.state.selectedRows) {
+      if (ids == "") {
         ids += this.state.selectedRows[key].attId
-      }else{
+      } else {
         ids += ',' + this.state.selectedRows[key].attId
       }
-      
+
     }
-    
+
     Util._httpPost("/project_war_exploded/attendance/deleteAttendance.do", {
-      attId:ids
+      attId: ids
     }).then((params) => {
       this.findAll(1, this.state.pagination.pageSize);
       message.success(params.data.message)
@@ -294,7 +308,7 @@ class KqsbSb extends Component {
 
     })
 
-} 
+  }
   //设备查询
   findAll = (current, pageSize, text) => {
     Util._httpPost("/project_war_exploded/attendance/findAll.do", JSON.stringify({
@@ -311,6 +325,8 @@ class KqsbSb extends Component {
           data[key].attScene = "签到"
         } else if (data[key].attScene === "10") {
           data[key].attScene = "签退"
+        } else if (data[key].attScene === "11") {
+          data[key].attScene = "门禁"
         }
         if (data[key].attType === "4") {
           data[key].attType = "离线版"
@@ -328,7 +344,7 @@ class KqsbSb extends Component {
       })
 
       if (text) {
-        message.success(text,0.5)
+        message.success(text, 0.5)
       }
 
     }).catch((error) => {
@@ -364,7 +380,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
- 
+
     })
 
   }
@@ -372,7 +388,14 @@ class KqsbSb extends Component {
   //有线网络配置
   setNetInfo = () => {
 
-    let IP = 'http://' + this.state.data.attIp + ':' + this.state.data.attPort;
+    let ip = this.state.data.attIp;
+    this.state.datalist.map((_d) => {
+      if (_d.id === this.state.data.id) {
+        ip = _d.attIp;
+      }
+    })
+
+    let IP = 'http://' + ip + ':' + this.state.data.attPort;
     Util.$http.post(IP + '/setNetInfo', {
       pass: this.state.data.attPass,
       isDHCPMod: this.state.data.isDHCPMod,
@@ -423,7 +446,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
- 
+
     })
 
   }
@@ -439,7 +462,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-  
+
     })
 
     //设备心跳回调
@@ -449,7 +472,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-  
+
     })
 
     //注册照片回调
@@ -459,7 +482,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-    
+
     })
 
 
@@ -479,7 +502,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-   
+
     })
 
   }
@@ -493,7 +516,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-  
+
     })
   }
 
@@ -506,7 +529,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-    
+
     })
   }
 
@@ -518,7 +541,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-    
+
     })
   }
   //设置时间
@@ -530,7 +553,7 @@ class KqsbSb extends Component {
     }).then((params) => {
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
-     
+
     })
   }
 
@@ -539,7 +562,9 @@ class KqsbSb extends Component {
     let IP = 'http://' + this.state.data.attIp + ':' + this.state.data.attPort;
     Util.$http.post(IP + '/getDeviceKey  ', {
     }).then((params) => {
-      this.setState({ serialNumber: params.data.data });
+      
+      this.setState({ data: {...this.state.data,attSn:params.data.data }});
+
       this.setDataText(JSON.stringify(params.data) + '\n');
     }).catch(function (error) {
 
@@ -677,6 +702,7 @@ class KqsbSb extends Component {
                               <Option value='8'>签到/签退</Option>
                               <Option value='9'>签到</Option>
                               <Option value='10'>签退</Option>
+                              <Option value='11'>门禁</Option>
                             </Select>
                           </div>
                           <div className="required">
@@ -691,15 +717,32 @@ class KqsbSb extends Component {
                   <ElasticFrame
                     style={{ width: 800, height: 670 }}
                     title={this.state.newlyPopup.title}
-                    
+                    titleText={""}
                     close={() => {
                       this.setState({
                         newlyPopup: { switch: false }
                       })
                     }}
+                    ok={() => {
+                      this.updateAttendance(this.state.data);
+                      this.setState({
+                        newlyPopup: { switch: false }
+                      })
+                      // Util._httpPost('project_war_exploded/attendance/editConfigure.do', {
+                      //   ...this.state.data,
+                      //   config: JSON.stringify(config)
+                      // }).then((params) => {
+                      //   this.setState({
+                      //     newlyPopup: { switch: false }
+                      //   })
+                      //   this.findAll(1, this.state.pagination.pageSize);
+                      //   message.success(params.data.message);
+                      // }).catch(function (error) {
 
+                      // })
+                    }}
                     renderDom={(props) => {
-                      debugger
+
                       return (
                         <div className="kqsb-sb_newly_added">
 
@@ -719,7 +762,7 @@ class KqsbSb extends Component {
                             </div>
 
                             <div className="box_border" style={{ height: 140 }}>
-                              <span className="box_border_title">网络参数：<Button onClick={this.setNetInfo} type="primary">设置</Button></span>
+                              <span className="box_border_title">网络参数：<Button onClick={() => { this.setNetInfo(this.state.data) }} type="primary">设置</Button></span>
                               <div className="kqsb-sb_tableStyle_div required"><label>设置IP</label>
                                 <Input type="text" value={this.state.data.attIp} onChange={(e) => this.setState({ data: { ...this.state.data, attIp: e.target.value } })} className="valid" />
                               </div>
@@ -734,8 +777,8 @@ class KqsbSb extends Component {
                               </div>
                               <div className="kqsb-sb_tableStyle_div"><label>IP获取模式</label>
                                 <Select value={this.state.data.isDHCPMod} onChange={(value) => this.setState({ data: { ...this.state.data, isDHCPMod: value } })}>
-                                  <Option value="1">手动配置模式</Option>
-                                  <Option value="2">DHCP模式</Option>
+                                  <Option value="2">手动配置模式</Option>
+                                  <Option value="1">DHCP模式</Option>
                                 </Select>
                               </div>
                             </div>
@@ -870,7 +913,7 @@ class KqsbSb extends Component {
 
                             <div className="box_border" style={{ height: 140 }}>
                               <span className="box_border_title">设置回调URL：<Button onClick={this.setCallbackURL} type="primary">设置</Button></span>
-                              <div style={{ width: '100%' }} className="kqsb-sb_tableStyle_div box_border_input"><label>设备回调URL</label>
+                              <div style={{ width: '100%' }} className="kqsb-sb_tableStyle_div box_border_input"><label>识别回调URL</label>
                                 <Input value={this.state.data.config.callbackUrl} onChange={(e) => this.setState({ data: { ...this.state.data, config: { ...this.state.data.config, callbackUrl: e.target.value } } })} type="text" className="valid" />
                               </div>
                               <div style={{ width: '100%' }} className="kqsb-sb_tableStyle_div box_border_input"><label>设置心跳URL</label>
@@ -925,12 +968,17 @@ class KqsbSb extends Component {
 
                             <div className="box_border" style={{ height: 102 }}>
                               <div className="kqsb-sb_tableStyle_div" style={{ width: '100%' }}><label>序列号</label>
-                                <Input type="text" value={this.state.serialNumber} className="valid" />
+                                <Input type="text" value={this.state.data.attSn} className="valid" />
                                 <Button onClick={this.getDeviceKey}>读序列号</Button>
                               </div>
                               <Button onClick={this.setTime}>设置时间</Button>
                               <Button onClick={this.restartDevice}>重启设备</Button>
-                              <Button onClick={this.deviceReset}>设备重置</Button>
+                              <Button onClick={() => {
+                                this.setState({
+                                  visible: true,
+                                });
+                               
+                              }}>设备重置</Button>
                               <Button onClick={this.deviceOpenDoorControl}>远程开门</Button>
 
                             </div>
@@ -964,11 +1012,11 @@ class KqsbSb extends Component {
                         })
                       }}
                       ok={() => {
-                          this.deleteAttendance(this.state.data.attId);
-                          this.setState({
-                            newlyPopup: { switch: false }
-                          })
-                        }}
+                        this.deleteAttendance(this.state.data.attId);
+                        this.setState({
+                          newlyPopup: { switch: false }
+                        })
+                      }}
                       renderDom={(props) => {
                         return (
                           <div className="">
@@ -978,12 +1026,28 @@ class KqsbSb extends Component {
                       }}
                     /> : this.state.newlyPopup.title === "刷新" ?
                       this.toUpdate()
-                      : ""
+                      : ''
               :
               ""
           }
         </div>
-
+        <Modal
+          title="重启设备"
+          visible={this.state.visible}
+          onOk={()=>{
+            this.setState({
+              visible: false,
+            });
+            this.deviceReset()
+          }}
+          onCancel={()=>{
+            this.setState({
+              visible: false,
+            });
+          }}
+        >
+          <p> 你确定重启设备吗？</p>
+        </Modal>
 
       </div>
     );

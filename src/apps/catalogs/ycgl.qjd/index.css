@@ -1,0 +1,28 @@
+
+.ycgl-qjd{
+
+}
+.ycgl-qjd-data{
+    float: left;
+    width: 100%;
+   
+}
+
+.ycgl-qjd .rygl-ry-data{
+    margin-top: 100px;
+}
+.ycgl-qjd-data-datatable{
+    width: 100%;
+    height: 732px;
+    float: left;
+}
+
+.ycgl-qjd .query_condition .ant-calendar-picker-input{
+    width: 350px;
+    padding: 0px 6px !important;
+}
+
+.ycgl-qjd .div_img {
+    position: absolute;
+    top: 73px;
+}

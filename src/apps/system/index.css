@@ -1,0 +1,27 @@
+.system-yh{
+  float: left;
+}
+.system-yh-data{
+  float: left;
+  width: 100%;
+ 
+}
+
+.system-yh .rygl-ry-data{
+  margin-top: 100px;
+}
+.system-yh-data-datatable{
+  width: 100%;
+  height: 732px;
+  float: left;
+}
+
+.system-yh .query_condition .ant-calendar-picker-input{
+  width: 350px;
+  padding: 0px 6px !important;
+}
+
+.system-yh .div_img {
+  position: absolute;
+  top: 73px;
+}

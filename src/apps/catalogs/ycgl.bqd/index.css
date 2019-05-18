@@ -1,0 +1,19 @@
+
+.ycgl-bqd{
+
+}
+.ycgl-bqd-data{
+    float: left;
+    width: 100%;
+}
+
+.ycgl-bqd-data-datatable{
+    width: 100%;
+    height: 732px;
+    float: left;
+}
+
+.ycgl-bqd .query_condition .ant-calendar-picker-input{
+    width: 350px;
+    padding: 0px 6px !important;
+}

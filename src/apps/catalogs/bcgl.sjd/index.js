@@ -324,10 +324,14 @@ class BcglSjd extends Component {
         <Header style={{ background: '#fff', padding: 0 }} >
           <div className="query_condition">
             <div>
-              姓名：<Input value={this.state.testName} onChange={(e) => this.setState({ testName: e.target.value })} />
+              姓名：<Input value={this.state.testName}
+               onKeyDown={(event) => {
+                if (event.keyCode == 13) this.getFindAllTimeslot(1, this.state.pagination.pageSize)}} onChange={(e) => this.setState({ testName: e.target.value })} />
             </div>
             <div>
-              编号：<Input value={this.state.number} onChange={(e) => this.setState({ number: e.target.value })} />
+              编号：<Input value={this.state.number}
+               onKeyDown={(event) => {
+                if (event.keyCode == 13) this.getFindAllTimeslot(1, this.state.pagination.pageSize)}} onChange={(e) => this.setState({ number: e.target.value })} />
             </div>
             <div>
               <Button onClick={() => this.getFindAllTimeslot(1, this.state.pagination.pageSize)} icon="search">搜索</Button>

@@ -99,7 +99,10 @@ class ElasticFrame extends Component {
             }
           </div>
           <div className="elastic_button">
-            <Button disabled={this.props.titleText !== ""} onClick={this.props.ok}>确定</Button>
+            {
+              this.props.ok?<Button disabled={this.props.titleText !== ""} onClick={this.props.ok}>确定</Button>:""
+            }
+   
             <Button onClick={this.props.close}>取消</Button>
           </div>
 

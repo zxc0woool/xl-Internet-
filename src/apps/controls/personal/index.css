@@ -1,0 +1,19 @@
+
+
+.personal{
+  
+}
+
+.personal .body{
+  
+}
+
+.personal .tableStyle_div label{
+    display: -webkit-inline-box;
+    width: 100px;
+}
+
+.personal .tableStyle_div input{
+    margin: 6px auto;
+    width: 200px;
+}

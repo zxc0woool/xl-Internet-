@@ -175,8 +175,10 @@ Calendar.prototype = {
                 viewData[date].push(item);
             }
             else if (!modeMonth && year == modeYear) {
-                if (!viewData[month]) viewData[month] = [];
-                viewData[month].push(item);
+                // if (!viewData[month]) viewData[month] = [];
+                // viewData[month].push(item);
+                if (!viewData[date]) viewData[date] = [];
+                viewData[date].push(item);
 
             }
 

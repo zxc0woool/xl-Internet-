@@ -1,15 +1,15 @@
 .Index{
-    min-height: 400px;
+    min-height: 400px;  
 }
 .body{
     height: 100%;
-    width: 1150px;
+    width: 1360px;
     margin: 0 auto;
 }
 .Title-Top-H1{
     height: 40px;
     width: 100%;
-    margin: 48px 0 10px 0;
+    margin: 60px 0 10px 0;
     font-size: 18px;
 }
 .Title-Taxt{
@@ -23,12 +23,24 @@
 
 .biometric_data{
     height: 249px;
-    width: 900px;
+    width: 350px;
     float: left;
     margin-left: 20px;
 }
+
+
+.prompting_chain_equipment{
+    float: right;
+    height: 700px;
+    width: 300px;
+    /* background-color: antiquewhite; */
+    padding: 5px 10px;
+    overflow-y: auto;
+}
 .index-count{
     float: left;
+    width: 300px;
+    height: 250px;
 }
 
 
@@ -44,13 +56,13 @@
     color: #4a4d59;
 }
 .bio-item-box{
-    width: 180px;
+    width: 100%;
     margin-right: 0px;
-    height: 182px;
+    height: 100%;
     display: block;
     float: left;
     position: relative;
-    border-right: 1px solid #f2f2f2;
+    /* border-right: 1px solid #f2f2f2; */
 }
 .bio-item-chart{
     -webkit-tap-highlight-color: transparent;
@@ -78,7 +90,7 @@
 
 .chart_item{
     height: 300px;
-    width: 1150px;
+    width: 1040px;
 }
 
 .module_chart_tab_cla{
@@ -87,6 +99,10 @@
     height: 40px;
     line-height: 40px;
     color: #474b4f;
+    margin-bottom: 20px;
+}
+.tab_head_cla{
+ 
 }
 .tab_head_cla li{
     min-width: 80px;
@@ -151,4 +167,31 @@
 }
 .bar-box .bar-chart .bar-chart-content{
     height: 100%;
+}
+
+.Index .proportion{
+    background-color: #693be6;
+    width: 100%;
+    height: 100%;
+}
+
+.Index .chain_ratio{
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    color: #fff;
+}
+.Index .number_of_check_in{
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    font-size: 30px;
+    color: #fff;
+}
+.Index .check_in{
+    position: absolute;
+    bottom: 5px;
+    left: 20px;
+    width: 100%;
+    color: #d6d6d6;
 }

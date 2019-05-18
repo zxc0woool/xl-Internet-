@@ -207,7 +207,7 @@ const util = {
      * @param {*} api  api地址
      * @param {*} params 参数
      */
-    _httpPost: function (api, params) {
+    _httpPost: function (api, params,Cfg) {
         //获取用户信息
         let obj = JSON.parse(cookie.getCookie('user'));
         let token = "";
@@ -230,6 +230,7 @@ const util = {
             dataType: 'jsonp',
             // token:token,
             changeOrigin: true, //允许跨域
+            ...Cfg
         };
         // debugger
         let param = qs.stringify(params)

@@ -88,7 +88,8 @@ padding: 4px 6px !important;
     padding-left: 10px;
 }
 .query_condition div{
-    height: 18px;
+    height: 40px;
     float: left;
     margin-right: 10px;
+    line-height: 40px;
 }

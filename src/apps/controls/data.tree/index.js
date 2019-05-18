@@ -59,7 +59,7 @@ class DataTree extends Component {
 
   onSelect = (selectedKeys, info) => {
     if(this.props.ongetfindAllByDepartment){
-      this.props.ongetfindAllByDepartment(info.node.props);
+      this.props.ongetfindAllByDepartment(1, this.props.pagination.pageSize,info.node.props);
     }
    
     // console.log('selected', selectedKeys, info);

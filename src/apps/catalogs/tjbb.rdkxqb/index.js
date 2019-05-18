@@ -4,23 +4,29 @@ import React, { Component } from 'react';
 import DataTree from '../../controls/data.tree';
 import DataTable from '../../controls/data.table';
 import Util from '../../../uilt/http.utils';
-import { Input, Select, DatePicker, Checkbox, Row, Col, message, Button, Layout, Switch } from 'antd';
+import { Input, Select, DatePicker, Checkbox, Spin, message, Button, Layout, Switch } from 'antd';
 import './index.css';
 import moment from 'moment';
+import cookie from '../../../uilt/cookie';
 
 const { Header } = Layout;
+let isDepartmentId = '';
+let striping = false;
 class TjbbRdkxqb extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       localValue: '',
+      token: '',
+      userPerId: "",
       startTime: new Date(),
       endTime: new Date(),
       newlyPopup: {
         title: "",
         switch: true,
       },
+      loading: false,
       pagination: {
         total: 0,  //数据总数量
         pageSize: 50, //显示几条一页
@@ -57,39 +63,41 @@ class TjbbRdkxqb extends Component {
         }, {
           title: '最早时间',
           dataIndex: 'startTime',
-          width: 80,
+          sorter: true,
+          width: 100,
         }, {
           title: '最晚时间',
           dataIndex: 'endTime',
-          width: 80,
+          sorter: true,
+          width: 100,
         }, {
           title: '打卡时间',
           dataIndex: 'Record',
 
           render: (e, _d) => {
-            return <div style={{width:200 }}className="rygl-bm-operation">
+            return <div style={{ width: 200 }} className="rygl-bm-operation">
               {_d.Record.toString()}
             </div>
           },
-        //   render: (record, text) =>{
-        //     let snArray=[];
-        //     snArray=text.Record;
+          //   render: (record, text) =>{
+          //     let snArray=[];
+          //     snArray=text.Record;
 
-        //     let br=<br></br>;
-        //     let result=null;
-        //     if(snArray.length<5){
-        //         return text.Record.toString();
-        //     }
+          //     let br=<br></br>;
+          //     let result=null;
+          //     if(snArray.length<5){
+          //         return text.Record.toString();
+          //     }
 
-        //     for(let i=0;i<snArray.length;i++){
-        //         if(i==0){
-        //             result=snArray[i];
-        //         }else{
-        //             result=<span>{result}{br}{snArray[i]}</span>;
-        //         }
-        //     }
-        //     return <div>{result}</div>;
-        // }
+          //     for(let i=0;i<snArray.length;i++){
+          //         if(i==0){
+          //             result=snArray[i];
+          //         }else{
+          //             result=<span>{result}{br}{snArray[i]}</span>;
+          //         }
+          //     }
+          //     return <div>{result}</div>;
+          // }
 
         }
       ],
@@ -116,6 +124,22 @@ class TjbbRdkxqb extends Component {
 
     //   });
     // }
+
+    //获取用户信息
+    let obj = JSON.parse(cookie.getCookie('user'));
+    if (obj && obj.user) {
+      let user = obj.user;
+
+      this.setState({
+        token: user.token,
+
+      });
+
+    }
+
+
+
+
     this.setState({ startTime: d }, () => {
       this.selectReportForm(1, this.state.pagination.pageSize);
     });
@@ -123,17 +147,21 @@ class TjbbRdkxqb extends Component {
     // this.selectReportForm(1, this.state.pagination.pageSize);
   }
 
-  selectReportForm = (current, pageSize, departmentId, text) => {
-
+  selectReportForm = (current, pageSize, departmentId, text, order) => {
+    isDepartmentId = departmentId
     let startTime = this.state.startTime ? (new Date(this.state.startTime)).Format("yyyy-MM-dd hh:mm:ss") : this.state.startTime;
     let endTime = this.state.endTime ? (new Date(this.state.endTime)).Format("yyyy-MM-dd hh:mm:ss") : this.state.endTime;
+    this.setState({ loading: true });
     Util._httpPost("/project_war_exploded/reportForm/selectReportForm.do", JSON.stringify({
       startTime: startTime,
       endTime: endTime,
       departmentId: departmentId,
       page: current,
       size: pageSize,
-      name: this.state.userName
+      name: this.state.userName,
+      perId: this.state.userPerId,
+      attendance: 4,
+      ...order
     })).then((params) => {
       let data = [];
       for (let key in params.data.rows) {
@@ -145,10 +173,12 @@ class TjbbRdkxqb extends Component {
         pagination: {
           total: params.data.total,  //数据总数量
           pageSize: pageSize, //显示几条一页
-        }
+        },
+        loading: false
       })
+
       if (text) {
-        message.success(text,0.5)
+        message.success(text, 0.5)
       }
 
     }).catch((error) => {
@@ -161,10 +191,13 @@ class TjbbRdkxqb extends Component {
     setTimeout(() => {
       this.setState({
         newlyPopup: { switch: false }
+      }, () => {
+        isDepartmentId = '';
+        this.selectReportForm(1, this.state.pagination.pageSize, undefined, "刷新成功");
       })
     }, 0)
 
-    this.selectReportForm(1, this.state.pagination.pageSize,undefined, "刷新成功");
+
   }
 
   newlyPopup = (_d, title) => {
@@ -186,17 +219,23 @@ class TjbbRdkxqb extends Component {
     let a = document.createElement('a');
     a.target = "_blank";
     a.href = Util.htmlPreposition +
-    "/project_war_exploded/reportForm/export.do?startTime=" +
-    (this.state.startTime ? (new Date(this.state.startTime)).Format("yyyy-MM-dd") : this.state.startTime) + 
-    '&endTime=' + 
-    (this.state.endTime ? (new Date(this.state.endTime)).Format("yyyy-MM-dd") : this.state.endTime);
+      "/project_war_exploded/reportForm/export.do?" +
+      "&attendance=4" + 
+      "&perId=" + this.state.userPerId +
+      "&departmentId=" + isDepartmentId +
+      "&token=" + this.state.token +
+      "&startTime=" +
+      (this.state.startTime ? (new Date(this.state.startTime)).Format("yyyy-MM-dd") : this.state.startTime) +
+      '&endTime=' +
+      (this.state.endTime ? (new Date(this.state.endTime)).Format("yyyy-MM-dd") : this.state.endTime);
     a.click();
   }
-  
+
 
   //拉取设备打卡数据
   updateReportForm = () => {
     Util._httpPost("/project_war_exploded/reportForm/updateReportForm.do", JSON.stringify({
+
     })).then((params) => {
 
       if (params.data.flag) {
@@ -222,6 +261,21 @@ class TjbbRdkxqb extends Component {
     })
   }
 
+  handleTableChange = (pagination, filters, sorter) => {
+    let order = { startTimeSort: '', endTimeSort: '' };
+    if (striping) return striping = false;
+    if (sorter && sorter.order === 'ascend') { //升序
+      order[sorter.columnKey + `Sort`] = 'asc'
+
+    } else if (sorter && sorter.order === 'descend') { //下序
+      order[sorter.columnKey + `Sort`] = 'desc'
+
+    } else if (!sorter) { //无序
+      order[sorter.columnKey + `Sort`] = ''
+
+    }
+    this.selectReportForm(1, this.state.pagination.pageSize, undefined, false, order);
+  }
   render() {
 
     return (
@@ -229,7 +283,7 @@ class TjbbRdkxqb extends Component {
         <Header style={{ background: '#fff', padding: 0 }} >
           <div className="query_condition">
             <div>
-              时间 从
+              <span style={{ position: 'relative', bottom: 14 }}>时间 从</span>
               <DatePicker format="YYYY-MM-DD HH:mm:ss" value={this.state.startTime ? moment(this.state.startTime, "YYYY-MM-DD HH:mm:ss") : this.state.startTime} onChange={(value) => {
                 this.setState({
                   startTime: value
@@ -237,7 +291,8 @@ class TjbbRdkxqb extends Component {
               }} placeholder="开始时间" showTime />
             </div>
             <div>
-              到
+              <span style={{ position: 'relative', bottom: 14 }}>到</span>
+
               <DatePicker format="YYYY-MM-DD HH:mm:ss" value={this.state.endTime ? moment(this.state.endTime, "YYYY-MM-DD HH:mm:ss") : this.state.endTime} onChange={(value) => {
                 this.setState({
                   endTime: value
@@ -245,30 +300,44 @@ class TjbbRdkxqb extends Component {
               }} placeholder="结束时间" showTime />
             </div>
             <div>
-              人员名称<Input value={this.state.userName} onChange={(e) => this.setState({ userName: e.target.value })} />
+              人员编号<Input value={this.state.userPerId}
+                onKeyDown={(event) => {
+                  if (event.keyCode == 13) this.selectReportForm(1, this.state.pagination.pageSize)
+                }} onChange={(e) => this.setState({ userPerId: e.target.value })} />
+            </div>
+            <div>
+              设备名称
+              <Input value={this.state.userName}
+                onKeyDown={(event) => {
+                  if (event.keyCode == 13) this.selectReportForm(1, this.state.pagination.pageSize)
+                }} onChange={(e) => this.setState({ userName: e.target.value })} />
+
+
             </div>
             <div>
               <Button onClick={() => this.selectReportForm(1, this.state.pagination.pageSize)} icon="search">搜索</Button>
             </div>
-            <div>
+            {/* <div>
               <Button onClick={() => this.updateReportForm()}>拉取设备打卡数据</Button>
-            </div>
+            </div> */}
 
             <div>
               <Button onClick={this.onAClick}>
                 导出
               </Button>
             </div>
-            
+
           </div>
         </Header>
         <div className="tjbb-rdkxqb-data">
           <div className="tjbb-rdkxqb-data-datatree">
-            <DataTree ongetfindAllByDepartment={(_d) => this.selectReportForm(1, this.state.pagination.pageSize, _d.id)} {...this.state} />
+            <DataTree ongetfindAllByDepartment={(current, pageSize, _d) => this.selectReportForm(current, pageSize, _d.id)} {...this.state} />
           </div>
 
           <div className="tjbb-rdkxqb-data-datatable">
-            <DataTable scroll={{ x: 1300 }} onGetData={this.selectReportForm} onNewlyPopup={this.newlyPopup} {...this.state} />
+            <Spin spinning={this.state.loading} tip="Loading...">
+              <DataTable scroll={{ x: 1300 }} onGetData={(current, pageSize) => { this.selectReportForm(current, pageSize); striping = true; }} onNewlyPopup={this.newlyPopup} {...this.state} onChange={this.handleTableChange} />
+            </Spin>
           </div>
           {
             //弹出框

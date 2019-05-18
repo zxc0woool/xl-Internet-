@@ -1,7 +1,7 @@
 
 
 import React, { Component } from 'react';
-import { Layout, Button, Input, Icon, message, Checkbox } from 'antd'
+import { Layout, Button, Input, Icon, message, Checkbox, Spin } from 'antd'
 import DataTree from '../../controls/data.tree';
 import DataTreeCheckList from '../../controls/data.tree.check.list';
 import DataTable from '../../controls/data.table';
@@ -19,6 +19,8 @@ class EquipmentPersonnelManagement extends Component {
     super(props);
     this.state = {
       data: {},
+      loading: false,
+      superStatus: '',
       testName: "",
       userName: "",
       titleText: "",
@@ -44,10 +46,6 @@ class EquipmentPersonnelManagement extends Component {
       datalist: [],
       dataColumns: [
         {
-          title: '账号',
-          dataIndex: 'account',
-          width: 50,
-        }, {
           title: '编号',
           dataIndex: 'perId',
           width: 50,
@@ -81,11 +79,10 @@ class EquipmentPersonnelManagement extends Component {
     this.getDepartment();
     this.findAll();
     this.onGetData(1, this.state.pagination.pageSize);
-
   }
 
   onGetData = (current, pageSize) => {
-
+    this.setState({ loading: true });
     Util._httpPost("/project_war_exploded/person/importEquipment.do", JSON.stringify({
 
     })).then((params) => {
@@ -97,6 +94,7 @@ class EquipmentPersonnelManagement extends Component {
       this.setState({
         datalist: data,
         lodatalist: data,
+        loading: false,
         pagination: {
           total: params.data.total,  //数据总数量
           pageSize: pageSize, //显示几条一页
@@ -121,6 +119,8 @@ class EquipmentPersonnelManagement extends Component {
         list.push(data[key]);
       } else if (data[key].account && data[key].account.toString().indexOf(testName) !== -1) {
         list.push(data[key]);
+      } else if (data[key].departmentId && data[key].departmentId.toString() === testName) {
+        list.push(data[key]);
       } else if (!data[key].perPhoto && '照片注册'.indexOf(testName) !== -1) {
         list.push(data[key]);
       }
@@ -132,6 +132,25 @@ class EquipmentPersonnelManagement extends Component {
     // }
     this.setState({
       testName: testName,
+      datalist: list,
+      pagination: {
+        ...this.state.pagination,
+        total: list.length  //数据总数量
+
+      }
+    })
+  }
+  searchDepartment = (testName) => {
+    let data = this.state.lodatalist;
+    let list = [];
+    for (let key in this.state.lodatalist) {
+      if (data[key].departmentId && data[key].departmentId.toString() === testName) {
+        list.push(data[key]);
+      }
+
+    }
+
+    this.setState({
       datalist: list,
       pagination: {
         ...this.state.pagination,
@@ -395,7 +414,7 @@ class EquipmentPersonnelManagement extends Component {
               })
 
               this.setState({
-                dataText: text,
+                dataText: this.state.dataText + text,
                 totalProgress: params.data.Percentage
               })
               if (params.data.finish) {
@@ -428,8 +447,8 @@ class EquipmentPersonnelManagement extends Component {
 
   //通过部门查询人员
   getfindAllByDepartment = (_d) => {
-    Util._httpPost("/project_war_exploded/person/findAllByEquipment.do", JSON.stringify({
-      departId: parseInt(_d.id),
+    Util._httpPost("/project_war_exploded/person/importEquipment.do", JSON.stringify({
+      departId: _d.id + '',
     })).then((params) => {
       let data = [];
       for (let key in params.data.rows) {
@@ -517,7 +536,7 @@ class EquipmentPersonnelManagement extends Component {
         Util.$http.post(IP + '/person/create', {
           pass: equipment[key].attPass,
           person: JSON.stringify(person)
-        }, { timeout: 10000 }).then((params) => {
+        }).then((params) => {
           totalProgress += add
           if (params.data !== "" && !params.data.success) {
 
@@ -525,13 +544,13 @@ class EquipmentPersonnelManagement extends Component {
               pass: equipment[key].attPass,
               person: JSON.stringify(person)
             }).then((params) => {
-              text += '系统信息：' + "更新人员 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + '\n';
+              text += '更新人员：' + "姓名：'" + person.name + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + '\n';
             }).catch(function (error) {
               _this.setDataText('系统错误');
             })
 
           } else {
-            text += '系统信息：' + "导入人员 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + '\n';
+            text += '导入人员：' + "姓名：'" + person.name + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + '\n';
 
           }
 
@@ -548,7 +567,7 @@ class EquipmentPersonnelManagement extends Component {
               featureKey: selectedRows[i].featureKey,
             }).then((params) => {
               totalProgress += add
-              text += '系统信息：' + "导入特征码 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + '\n';
+              text += '导入特征码：' + "姓名：'" + person.name + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + '\n';
 
               // time: parseInt((js - ks) / 1000) + '秒'
 
@@ -593,7 +612,7 @@ class EquipmentPersonnelManagement extends Component {
               }).then((params) => {
                 totalProgress += add
 
-                text += '系统信息：' + "导入照片 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + '\n';
+                text += '导入照片：' + "姓名：'" + person.name + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data) + '\n';
 
 
                 // time: parseInt((js - ks) / 1000) + '秒'
@@ -605,12 +624,12 @@ class EquipmentPersonnelManagement extends Component {
             } else {
               totalProgress += add
 
-              text += '系统信息：' + "导入照片 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + "  照片不存在或格式不正确! 图片格式支持( png、jpg、jpeg )  " + "\n";
+              text += '导入照片：' + "姓名：'" + person.name + + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + "  照片不存在或格式不正确! 图片格式支持( png、jpg、jpeg )  " + "\n";
 
             }
           } else {
             totalProgress += add
-            text += '系统信息：' + "导入照片 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + "  照片不存在或格式不正确! 图片格式支持( png、jpg、jpeg )  " + "\n";
+            text += '导入照片：' + "姓名：'" + person.name + "' 【设备信息】：设备名 '" + equipment[key].attName + "' " + "  照片不存在或格式不正确! 图片格式支持( png、jpg、jpeg )  " + "\n";
 
           }
 
@@ -618,7 +637,7 @@ class EquipmentPersonnelManagement extends Component {
         }).catch(function (error) {
           totalProgress += add
           // js = new Date().getTime();
-          text += '系统信息：' + "导入人员 >>> 姓名：'" + person.name + "'  id：'" + person.id + "' 【设备信息】： 设备名： '" + equipment[key].attName + "' " + "  当前设备网络连接超时！ 当前人员照片导入已取消！ " + "\n";
+          text += '导入人员：' + "姓名：'" + person.name + "' 【设备信息】： 设备名： '" + equipment[key].attName + "' " + "  当前设备网络连接超时！ 当前人员照片导入已取消！ " + "\n";
 
           // time: parseInt((js - ks) / 1000) + '秒'
 
@@ -662,8 +681,8 @@ class EquipmentPersonnelManagement extends Component {
 
     totalProgress = 0;
     let add = 100 / (equipmentIndex)
-    if (!selectedRowsIndex) this.setDataText('请选择删除人员');
-    if (!equipmentIndex) this.setDataText('请选择删除设备');
+    if (selectedRowsIndex <= 0) return this.setDataText('请选择删除人员');
+    if (equipmentIndex <= 0) return this.setDataText('请选择删除设备');
     this.setDataText('人员删除中...');
     this.setState({
       totalProgress: (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)),
@@ -689,14 +708,14 @@ class EquipmentPersonnelManagement extends Component {
         id: id
       }).then((params) => {
         totalProgress += add
-     
+
         this.setDataText("删除人员 >>>【设备信息】：设备名 '" + equipment[key].attName + "' " + JSON.stringify(params.data))
-        if((parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)) === 100){
+        if ((parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)) === 100) {
           this.setState({
             totalProgress: (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress)),
-            isImplement:false
+            isImplement: false
           })
-        }else{
+        } else {
           this.setState({
             totalProgress: (parseInt(totalProgress) === 99 ? 100 : parseInt(totalProgress))
           })
@@ -848,11 +867,13 @@ class EquipmentPersonnelManagement extends Component {
         <div className="rygl-ry-data">
 
           <div className="rygl-ry-data-datatree">
-            <DataTree ongetfindAllByDepartment={this.getfindAllByDepartment} {...this.state} />
+            <DataTree ongetfindAllByDepartment={(current, pageSize, _d) => { this.searchDepartment(_d.id) }} {...this.state} />
           </div>
 
           <div className="rygl-ry-data-datatable">
-            <DataTable setSelectedRows={this.setSelectedRows} onGetData={() => { }} {...this.state} />
+            <Spin spinning={this.state.loading} delay={500}>
+              <DataTable setSelectedRows={this.setSelectedRows} onGetData={() => { }} {...this.state} />
+            </Spin>
           </div>
 
           <div className="rygl-ry-data-datatree-equipment">

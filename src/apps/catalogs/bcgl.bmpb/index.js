@@ -390,7 +390,7 @@ class BcglBmpb extends Component {
       <div className="bcgl_bmpb">
         <div className="bcgl_bmpb-data">
           <div className="bcgl_bmpb-data-datatree">
-            <DataTree {...this.state} ongetfindAllByDepartment={this.findAllScheduling} />
+            <DataTree {...this.state} ongetfindAllByDepartment={(current, pageSize,_d)=>{this.findAllScheduling(_d)}}  />
           </div>
 
           <div className="bcgl_bmpb-data-datatable">

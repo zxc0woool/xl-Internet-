@@ -73,6 +73,7 @@ class DataTree extends Component {
             this.props.container ? this.props.container(this.props) :
               <Table
                 bordered
+                onChange={this.props.onChange?this.props.onChange:()=>{}}
                 selectedRowKeys={this.props.selectedRowKeys?this.props.selectedRowKeys:()=>{}}
                 onRow={this.props.onRow?this.props.onRow:()=>{}}
                 loading={false}

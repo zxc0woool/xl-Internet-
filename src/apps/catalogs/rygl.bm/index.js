@@ -6,6 +6,7 @@ import DataTree from '../../controls/data.tree';
 import DataTable from '../../controls/data.table';
 import ElasticFrame from '../../controls/elastic.frame';
 import Util from '../../../uilt/http.utils';
+import cookie from '../../../uilt/cookie';
 import './index.css';
 const { Header } = Layout;
 const TreeNode = TreeSelect.TreeNode;
@@ -21,6 +22,7 @@ class RyglBm extends Component {
       data: {},
       userName: "",
       titleText: "",
+      superStatus:'',
       newlyPopup: {
         title: "",
         switch: true,
@@ -111,6 +113,13 @@ class RyglBm extends Component {
     if (!this.state.data.departName) {
       titleText = '带 * 不得为空！'
     }
+
+    if(this.state.superStatus !== '1'){
+      if (!this.state.data.parentId) {
+        titleText = '带 * 不得为空！'
+      }
+    }
+
     if (titleTextUserIdDepartId !== "") {
       titleText = titleTextUserIdDepartId
     }
@@ -127,6 +136,14 @@ class RyglBm extends Component {
   }
 
   componentDidMount() {
+    //获取用户信息
+    let obj = JSON.parse(cookie.getCookie('user'));
+    if (obj && obj.user) {
+        let user = obj.user;
+        this.setState({
+          superStatus: user.superStatus // 是否超级用户
+        });
+    }
 
     this.getDepartments();
   }
@@ -280,7 +297,8 @@ class RyglBm extends Component {
         <Header style={{ background: '#fff', padding: 0 }} >
           <div className="query_condition">
             <div>
-              部门名称：<Input value={this.state.testName} onChange={(e) => this.setState({ testName: e.target.value })} />
+              部门名称：<Input value={this.state.testName} onKeyDown={(event) => {
+                if (event.keyCode == 13) this.findDepartmentAll(1, this.state.pagination.pageSize)}} onChange={(e) => this.setState({ testName: e.target.value })} />
             </div>
             <div>
               <Button onClick={() => this.findDepartmentAll(1, this.state.pagination.pageSize)} icon="search">搜索</Button>
@@ -390,7 +408,7 @@ class RyglBm extends Component {
 
 
                           <div className="rygl_bm_tableStyle_div">
-                            <label>上级部门</label>
+                            <label>上级部门{this.state.superStatus !== '1'?<span className="required">*</span>:''}</label>
                             <TreeSelect
                               showSearch
                               style={{ width: 300 }}
