@@ -1271,7 +1271,8 @@ class BcglPc extends Component {
                     ok={() => {
                       this.deleteShifts(this.state.data.shiNumber);
                       this.setState({
-                        newlyPopup: { switch: false }
+                        newlyPopup: { switch: false },
+                        selectedRows:[]
                       })
                     }}
                     renderDom={(props) => {

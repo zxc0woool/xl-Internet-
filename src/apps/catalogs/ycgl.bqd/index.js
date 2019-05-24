@@ -446,7 +446,7 @@ class YcglBqd extends Component {
 
                                                     </td>
                                                     <td>
-                                                        <Button onClick={() => this.getfindAllByDepartment({ id: '' })} icon="search">搜索</Button>
+                                                        <Button onClick={() => { this.getfindAllByDepartment(1, this.state.pagination.pageSize, {id:departId}) }} icon="search">搜索</Button>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -496,7 +496,8 @@ class YcglBqd extends Component {
                                         ok={() => {
                                             this.deleteSigning(this.state.data.id);
                                             this.setState({
-                                                newlyPopup: { switch: false }
+                                                newlyPopup: { switch: false },
+                                                selectedRows:[]
                                             })
                                         }}
                                         renderDom={(props) => {

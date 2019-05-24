@@ -306,12 +306,11 @@ class TjbbRdkxqb extends Component {
                 }} onChange={(e) => this.setState({ userPerId: e.target.value })} />
             </div>
             <div>
-              设备名称
+              人员名称
               <Input value={this.state.userName}
                 onKeyDown={(event) => {
                   if (event.keyCode == 13) this.selectReportForm(1, this.state.pagination.pageSize)
                 }} onChange={(e) => this.setState({ userName: e.target.value })} />
-
 
             </div>
             <div>
@@ -336,7 +335,7 @@ class TjbbRdkxqb extends Component {
 
           <div className="tjbb-rdkxqb-data-datatable">
             <Spin spinning={this.state.loading} tip="Loading...">
-              <DataTable scroll={{ x: 1300 }} onGetData={(current, pageSize) => { this.selectReportForm(current, pageSize); striping = true; }} onNewlyPopup={this.newlyPopup} {...this.state} onChange={this.handleTableChange} />
+              <DataTable scroll={{ x: 1300 }} onGetData={(current, pageSize) => { this.selectReportForm(current, pageSize); striping = true; }} onNewlyPopup={this.newlyPopup} {...this.state} setSelectedRows={()=>{}} onChange={this.handleTableChange} />
             </Spin>
           </div>
           {

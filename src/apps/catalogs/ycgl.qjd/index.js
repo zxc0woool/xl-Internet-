@@ -556,7 +556,8 @@ class YcglQjd extends Component {
                                         ok={() => {
                                             this.deleteLeave(this.state.data.id);
                                             this.setState({
-                                                newlyPopup: { switch: false }
+                                                newlyPopup: { switch: false },
+                                                selectedRows:[]
                                             })
                                         }}
                                         renderDom={(props) => {

@@ -8,6 +8,7 @@ import DataTreeCheckList from '../../controls/data.tree.check.list';
 import ElasticFrame from '../../controls/elastic.frame';
 import Util from '../../../uilt/http.utils';
 import moment from 'moment';
+// import 'require';
 import Fingerprint from '../fingerprint';
 import ZKIDROnline from '../../../file/ZKIDROnline.exe';
 import './index.css';
@@ -179,7 +180,7 @@ class Information extends Component {
   }
 
   handlePreview = (file) => {
-
+    debugger
     this.setState({
       previewImage: file.url || file.thumbUrl,
       previewVisible: true,
@@ -356,7 +357,7 @@ class Information extends Component {
                         if (params.data.success) {
 
                           clearInterval(heartbeat);
-
+                     
                           //提交保存图片
                           Util._httpPost('project_war_exploded/person/insertPersonPhoto.do', {
                             perId: _d.perId,
@@ -368,9 +369,7 @@ class Information extends Component {
                               this.setState({
                                 equipmentPhotoList: params.data.datalist
                               })
-                              this.setState({
-
-                              })
+                             
                               this.setState({
                                 isSnap: false,
                                 data: {
@@ -507,6 +506,7 @@ class Information extends Component {
 
   render() {
     const { previewVisible, previewImage, fileList } = this.state;
+
     const uploadButton = (
       <div>
         <Icon type="plus" />

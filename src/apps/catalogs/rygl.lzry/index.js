@@ -183,9 +183,9 @@ class RyglLzry extends Component {
 
     for(let key in this.state.selectedRows){
       if(ids == ""){
-        ids += this.state.selectedRows[key].id
+        ids += this.state.selectedRows[key].perId
       }else{
-        ids += ',' + this.state.selectedRows[key].id
+        ids += ',' + this.state.selectedRows[key].perId
       }
       
     }
@@ -333,12 +333,13 @@ class RyglLzry extends Component {
                       title={"提示"}
                       close={() => {
                         this.setState({
-                          newlyPopup: { switch: false }
+                          newlyPopup: { switch: false },
+                          selectedRows:[]
                         })
                       }}
                       titleText={this.state.titleText}
                       ok={() => {
-                        this.deleteQuitPerson(this.state.data.id);
+                        this.deleteQuitPerson(this.state.data.perId);
                         this.setState({
                           newlyPopup: { switch: false }
                         })

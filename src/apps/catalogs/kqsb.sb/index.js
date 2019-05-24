@@ -353,6 +353,16 @@ class KqsbSb extends Component {
   }
   //设备编辑
   updateAttendance = (_d) => {
+    
+    if (_d.attScene === "签到/签退") {
+      _d.attScene = "8"
+    } else if (_d.attScene === "签到") {
+      _d.attScene = "9"
+    } else if (_d.attScene === "签退") {
+      _d.attScene = "10"
+    } else if (_d.attScene === "门禁") {
+      _d.attScene = "11"
+    }
 
     _d.config = JSON.stringify(_d.config)
     Util._httpPost("/project_war_exploded/attendance/updateAttendance.do", JSON.stringify({
@@ -492,10 +502,11 @@ class KqsbSb extends Component {
   changeLogo = (e, logo) => {
     let IP = 'http://' + this.state.data.attIp + ':' + this.state.data.attPort;
     let strs = '-1';
-    if (logo) {
-      let sr = $('#imgForm img').attr("src");
+    let sr = $('#imgForm img').attr("src");
+    if (logo && sr)  {
       strs = sr.split("base64,");
     }
+ 
     Util.$http.post(IP + '/changeLogo', {
       pass: this.state.data.attPass,
       imgBase64: strs[1]
@@ -724,6 +735,8 @@ class KqsbSb extends Component {
                       })
                     }}
                     ok={() => {
+
+
                       this.updateAttendance(this.state.data);
                       this.setState({
                         newlyPopup: { switch: false }
@@ -1014,7 +1027,8 @@ class KqsbSb extends Component {
                       ok={() => {
                         this.deleteAttendance(this.state.data.attId);
                         this.setState({
-                          newlyPopup: { switch: false }
+                          newlyPopup: { switch: false },
+                          selectedRows:[]
                         })
                       }}
                       renderDom={(props) => {
@@ -1032,7 +1046,7 @@ class KqsbSb extends Component {
           }
         </div>
         <Modal
-          title="重启设备"
+          title="设备重置"
           visible={this.state.visible}
           onOk={()=>{
             this.setState({
@@ -1046,7 +1060,7 @@ class KqsbSb extends Component {
             });
           }}
         >
-          <p> 你确定重启设备吗？</p>
+          <p> 你确定设备重置吗？</p>
         </Modal>
 
       </div>

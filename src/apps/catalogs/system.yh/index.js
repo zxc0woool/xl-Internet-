@@ -466,7 +466,8 @@ class SystemYh extends Component {
                                         ok={() => {
                                             this.deleteUser(this.state.data.id + '');
                                             this.setState({
-                                                newlyPopup: { switch: false }
+                                                newlyPopup: { switch: false },
+                                                selectedRows:[]
                                             })
                                         }}
                                         renderDom={(props) => {

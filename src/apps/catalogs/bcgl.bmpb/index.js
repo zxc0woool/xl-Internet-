@@ -566,7 +566,8 @@ class BcglBmpb extends Component {
                       ok={() => {
                         this.deleteDepartmentalScheduling(this.state.data.schedulingId);
                         this.setState({
-                          newlyPopup: { switch: false }
+                          newlyPopup: { switch: false },
+                          setSelectedRows:[]
                         },()=>{
                           this.findAllScheduling(this.state.mydata)
                         })

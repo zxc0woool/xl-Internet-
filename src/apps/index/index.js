@@ -593,10 +593,11 @@ class Index extends Component {
                   <div>
                     <DataTable
                       style={{ height: 495, width: 620 }}
+                      scroll={{ y: 440 }}
                       closeTitle={true}
                       closePagination={true}
                       onNewlyPopup={() => { }}
-                      setSelectedRows={()=>{}}
+                      setSelectedRows={() => { }}
                       {...this.state}
                       dataColumns={[
                         {

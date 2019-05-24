@@ -313,7 +313,7 @@ class TjbbMjxqb extends Component {
 
           <div className="tjbb-mjxqb-data-datatable">
             <Spin spinning={this.state.loading} tip="Loading...">
-              <DataTable scroll={{ x: 1300 }} onGetData={(current, pageSize) => { this.selectReportForm(current, pageSize); striping = true; }} onNewlyPopup={this.newlyPopup} {...this.state} onChange={this.handleTableChange} />
+              <DataTable scroll={{ x: 1300 }} onGetData={(current, pageSize) => { this.selectReportForm(current, pageSize); striping = true; }} onNewlyPopup={this.newlyPopup} {...this.state} setSelectedRows={()=>{}} onChange={this.handleTableChange} />
             </Spin>
           </div>
           {

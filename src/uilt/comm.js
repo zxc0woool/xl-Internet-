@@ -14,6 +14,6 @@ module.exports = {
 
     SERVER_ADDRESS: '192.168.2.116:8080',
 
-    Edition: '1.0.04'
+    Edition: '1.0.05'
 
 };

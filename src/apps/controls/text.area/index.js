@@ -3,6 +3,12 @@ import style from './index.less';
 
 class TextArea extends Component {
 
+
+    componentDidUpdate(){
+        let DIV = this.refs.textAreaKet;
+        DIV.parentNode.scrollTop = DIV.scrollHeight;
+    }
+
     render() {
         let { value } = this.props
         if (!value) {
@@ -15,12 +21,10 @@ class TextArea extends Component {
 
 
         return (
-            <div id={this.props.id} className={style['TextArea']}>
+            <div id={this.props.id} ref={"textAreaKet"} className={style['TextArea']}>
                 {
                     vals.map((_d, i) => {
-
                         return <div key={i}>{_d}</div>
-
                     })
 
                 }

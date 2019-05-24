@@ -608,7 +608,8 @@ class BcglSjd extends Component {
                     ok={() => {
                       this.deleteTimeslot(this.state.data.slotNumber);
                       this.setState({
-                        newlyPopup: { switch: false }
+                        newlyPopup: { switch: false },
+                        selectedRows:[]
                       })
                     }}
                     renderDom={(props) => {

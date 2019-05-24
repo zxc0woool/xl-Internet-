@@ -101,6 +101,7 @@ class RyglRy extends Component {
   //更新数据
   toUpdate = () => {
     setTimeout(() => {
+      departmentId = "";
       this.setState({
         newlyPopup: { switch: false }
       }, () => {
@@ -868,7 +869,8 @@ class RyglRy extends Component {
                             ok={() => {
                               this.deletePerson(this.state.data.id);
                               this.setState({
-                                newlyPopup: { switch: false }
+                                newlyPopup: { switch: false },
+                                selectedRows:[]
                               })
                             }}
                             renderDom={(props) => {
